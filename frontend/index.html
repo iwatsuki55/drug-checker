@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>相互作用チェッカー | Drug Interaction Analyzer</title>
+<style>
+  /* ── リセット & ベース ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b1120;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(100,150,220,0.14);
+    --text: #dde6f0;
+    --muted: #4a6a8a;
+    --dim: #243550;
+    --blue: #3b82f6;
+    --cyan: #06b6d4;
+    --green: #4caf8a;
+    --red: #ff4444;
+    --orange: #ff8c00;
+    --yellow: #f0b429;
+    --font: 'DM Mono', 'Courier New', monospace;
+  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+
+  /* ── ヘッダー ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.02);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .logo {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+    box-shadow: 0 0 16px rgba(59,130,246,0.4);
+    flex-shrink: 0;
+  }
+  .header-title { font-size: 14px; font-weight: 600; }
+  .header-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 1px; }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+  .status-label { font-size: 10px; color: var(--green); letter-spacing: 0.08em; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+
+  /* ── メイン ── */
+  main { max-width: 740px; margin: 0 auto; padding: 36px 20px 60px; }
+
+  /* ── カード ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+  }
+  .card-label {
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ── 入力行 ── */
+  .drug-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .drug-num { font-size: 11px; color: var(--dim); min-width: 24px; text-align: right; }
+  .drug-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font);
+    outline: none;
+    transition: all 0.2s;
+  }
+  .drug-input:focus { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.07); }
+  .drug-input::placeholder { color: var(--dim); }
+  .btn-remove {
+    width: 26px; height: 26px;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted);
+    cursor: pointer; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .btn-remove:hover { border-color: rgba(255,68,68,0.4); color: #ff8888; }
+  .btn-remove:disabled { cursor: default; opacity: 0.3; }
+
+  .btn-add {
+    background: transparent;
+    border: 1px dashed rgba(100,150,220,0.25);
+    border-radius: 8px; padding: 7px 14px;
+    color: var(--muted); font-size: 12px;
+    font-family: var(--font); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-add:hover { border-color: rgba(59,130,246,0.4); color: #7aa4c8; }
+
+  /* ── 実行ボタン ── */
+  .btn-run {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    border: none; border-radius: 10px;
+    color: #fff; font-size: 14px; font-weight: 600;
+    font-family: var(--font); cursor: pointer;
+    letter-spacing: 0.06em; margin-bottom: 28px;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+    transition: all 0.2s;
+  }
+  .btn-run:hover { filter: brightness(1.08); }
+  .btn-run:disabled {
+    background: rgba(59,130,246,0.15);
+    color: var(--dim); cursor: default;
+    box-shadow: none;
+  }
+
+  /* ── エラー ── */
+  .error-box {
+    background: rgba(255,68,68,0.08);
+    border: 1px solid rgba(255,68,68,0.25);
+    border-radius: 10px; padding: 11px 15px;
+    font-size: 13px; color: #ff8888;
+    margin-bottom: 16px;
+  }
+
+  /* ── ローディング ── */
+  .loading-card { text-align: center; }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 2px solid rgba(59,130,246,0.2);
+    border-top: 2px solid var(--blue);
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    animation: spin 1s linear infinite;
+  }
+  .loading-step {
+    font-size: 13px; color: var(--muted); margin-bottom: 4px;
+  }
+  .loading-sub { font-size: 11px; color: var(--dim); }
+
+  /* ── 正規化バッジ ── */
+  .normalized-list {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+  }
+  .drug-badge {
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 6px; padding: 5px 10px;
+    font-size: 11px;
+  }
+  .drug-badge .generic { color: #7aa4c8; }
+  .drug-badge .original { color: var(--dim); font-size: 10px; margin-top: 1px; }
+  .drug-badge .class { color: var(--dim); font-size: 10px; }
+
+  /* ── リスクサマリー ── */
+  .risk-card {
+    border-left: 3px solid;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+  }
+  .risk-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .risk-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .risk-label { font-size: 11px; letter-spacing: 0.08em; }
+  .risk-count { font-size: 11px; color: var(--dim); margin-left: auto; }
+  .risk-summary { font-size: 12px; color: #7a9ac0; line-height: 1.8; }
+
+  /* ── 相互作用アイテム ── */
+  .interaction-item {
+    border-radius: 12px; margin-bottom: 10px; overflow: hidden;
+  }
+  .interaction-header {
+    width: 100%; background: transparent; border: none;
+    padding: 14px 18px; cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    text-align: left; color: var(--text);
+    font-family: var(--font); transition: all 0.15s;
+  }
+  .interaction-header:hover { filter: brightness(1.05); }
+  .interaction-icon { font-size: 14px; flex-shrink: 0; }
+  .interaction-title { flex: 1; }
+  .drug-names { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 3px; }
+  .drug-name { font-size: 13px; font-weight: 600; }
+  .drug-sep { font-size: 11px; color: var(--dim); }
+  .sev-badge {
+    font-size: 10px; border-radius: 4px;
+    padding: 1px 7px; border: 1px solid;
+  }
+  .onset-badge {
+    font-size: 10px; color: var(--dim);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .evidence-label { font-size: 10px; color: var(--dim); margin-left: auto; }
+  .interaction-effect { font-size: 11px; color: var(--muted); }
+  .toggle-arrow { font-size: 11px; color: var(--dim); transition: transform 0.2s; flex-shrink: 0; }
+  .toggle-arrow.open { transform: rotate(180deg); }
+
+  .interaction-detail { padding: 0 18px 18px; border-top: 1px solid; }
+  .detail-row { padding-top: 14px; }
+  .detail-label { font-size: 10px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 3px; }
+  .detail-value { font-size: 12px; line-height: 1.7; }
+  .detail-ref { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+  /* ── no-interaction ── */
+  .no-interaction {
+    text-align: center; padding: 24px;
+    background: rgba(76,175,138,0.06);
+    border: 1px solid rgba(76,175,138,0.2);
+    border-radius: 12px;
+  }
+  .no-interaction .check { font-size: 22px; margin-bottom: 6px; }
+  .no-interaction .msg { font-size: 13px; color: var(--green); }
+  .no-interaction .sub { font-size: 11px; color: #1a4030; margin-top: 4px; }
+
+  /* ── 推奨・モニタリング ── */
+  .list-item {
+    display: flex; gap: 10px; font-size: 12px;
+    color: #6a94bc; line-height: 1.7; padding: 3px 0;
+    border-bottom: 1px solid rgba(100,150,220,0.06);
+  }
+  .list-item:last-child { border-bottom: none; }
+  .list-arrow { color: #2a5a7a; flex-shrink: 0; }
+
+  /* ── 注意書き ── */
+  .disclaimer {
+    margin-top: 20px; padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(100,150,220,0.08);
+    border-radius: 10px;
+    font-size: 11px; color: var(--dim); line-height: 1.8;
+  }
+
+  /* ── アニメーション ── */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp 0.35s ease; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Rx</div>
+  <div>
+    <div class="header-title">相互作用チェッカー</div>
+    <div class="header-sub">DRUG INTERACTION ANALYZER — 2-AGENT AI SYSTEM</div>
+  </div>
+  <div class="header-right">
+    <div class="status-dot"></div>
+    <span class="status-label">CLAUDE POWERED</span>
+  </div>
+</header>
+
+<main>
+  <!-- 入力セクション -->
+  <div class="card" id="input-card">
+    <div class="card-label">01 / 薬剤入力（製品名・一般名 混在OK）</div>
+    <div id="drug-list"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+      <button class="btn-add" id="btn-add">+ 薬剤を追加</button>
+      <span style="font-size:11px;color:var(--dim);" id="drug-count">2/10</span>
+    </div>
+  </div>
+
+  <!-- エラー -->
+  <div class="error-box" id="error-box" style="display:none;"></div>
+
+  <!-- 実行ボタン -->
+  <button class="btn-run" id="btn-run">▶ 相互作用を解析</button>
+
+  <!-- ローディング -->
+  <div class="card loading-card" id="loading-card" style="display:none;">
+    <div class="spinner"></div>
+    <div class="loading-step" id="loading-step">エージェント①：薬剤名を正規化中...</div>
+    <div class="loading-sub">製品名→一般名の変換・表記揺れを統一しています</div>
+  </div>
+
+  <!-- 結果 -->
+  <div id="result-area" style="display:none;" class="fade-up"></div>
+</main>
+
+<script>
+// ── 設定 ──
+const API_BASE = "http://localhost:3001"; // ローカル開発時
+// const API_BASE = "https://your-app.onrender.com"; // デプロイ時はここを変更
+
+// ── 重篤度設定 ──
+const SEV = {
+  contraindicated: { label:"禁忌",   color:"#ff4444", bg:"rgba(255,68,68,0.1)",   border:"rgba(255,68,68,0.3)",   icon:"⛔" },
+  major:           { label:"重大",   color:"#ff8c00", bg:"rgba(255,140,0,0.1)",   border:"rgba(255,140,0,0.3)",   icon:"⚠️" },
+  moderate:        { label:"中程度", color:"#f0b429", bg:"rgba(240,180,41,0.1)",  border:"rgba(240,180,41,0.3)",  icon:"⚡" },
+  minor:           { label:"軽微",   color:"#4caf8a", bg:"rgba(76,175,138,0.1)", border:"rgba(76,175,138,0.3)", icon:"ℹ️" },
+};
+const RISK = {
+  high:     { label:"高リスク", color:"#ff4444" },
+  moderate: { label:"要注意",   color:"#f0b429" },
+  low:      { label:"低リスク", color:"#4caf8a" },
+  none:     { label:"問題なし", color:"#7aa4c8" },
+};
+const ONSET_LABEL = { immediate:"即時", delayed:"遅延", unknown:"不明" };
+
+// ── 状態 ──
+let drugs = ["", ""];
+let expandedIdx = null;
+
+// ── DOM ──
+const drugListEl  = document.getElementById("drug-list");
+const drugCountEl = document.getElementById("drug-count");
+const btnAdd      = document.getElementById("btn-add");
+const btnRun      = document.getElementById("btn-run");
+const errorBox    = document.getElementById("error-box");
+const loadingCard = document.getElementById("loading-card");
+const loadingStep = document.getElementById("loading-step");
+const resultArea  = document.getElementById("result-area");
+
+function renderInputs() {
+  drugListEl.innerHTML = "";
+  drugs.forEach((d, i) => {
+    const row = document.createElement("div");
+    row.className = "drug-row";
+    row.innerHTML = `
+      <span class="drug-num">${String(i+1).padStart(2,"0")}</span>
+      <input class="drug-input" type="text" value="${d}"
+        placeholder="薬剤名 ${i+1}（例：バイアスピリン、ワーファリン）"
+        data-idx="${i}" />
+      <button class="btn-remove" data-idx="${i}" ${drugs.length<=2?"disabled":""}>×</button>
+    `;
+    drugListEl.appendChild(row);
+  });
+  drugCountEl.textContent = `${drugs.length}/10`;
+  btnAdd.disabled = drugs.length >= 10;
+  updateRunBtn();
+}
+
+function updateRunBtn() {
+  const valid = drugs.filter(d => d.trim()).length;
+  btnRun.disabled = valid < 2;
+  btnRun.textContent = `▶ ${valid}剤の相互作用を解析`;
+}
+
+// イベント委譲
+drugListEl.addEventListener("input", e => {
+  if (e.target.matches(".drug-input")) {
+    drugs[+e.target.dataset.idx] = e.target.value;
+    updateRunBtn();
+  }
+});
+drugListEl.addEventListener("click", e => {
+  if (e.target.matches(".btn-remove") && !e.target.disabled) {
+    drugs.splice(+e.target.dataset.idx, 1);
+    renderInputs();
+  }
+});
+drugListEl.addEventListener("keydown", e => {
+  if (e.target.matches(".drug-input") && e.key === "Enter") {
+    const idx = +e.target.dataset.idx;
+    if (idx === drugs.length - 1 && drugs.length < 10) {
+      drugs.push("");
+      renderInputs();
+      setTimeout(() => drugListEl.querySelectorAll(".drug-input")[idx+1]?.focus(), 50);
+    }
+  }
+});
+btnAdd.addEventListener("click", () => {
+  if (drugs.length < 10) { drugs.push(""); renderInputs(); }
+});
+
+// ── 解析実行 ──
+btnRun.addEventListener("click", async () => {
+  const valid = drugs.map(d => d.trim()).filter(Boolean);
+  if (valid.length < 2) { showError("2剤以上入力してください"); return; }
+
+  hideError();
+  resultArea.style.display = "none";
+  loadingCard.style.display = "block";
+  loadingStep.textContent = "エージェント①：薬剤名を正規化中...";
+  btnRun.disabled = true;
+  expandedIdx = null;
+
+  // Step1完了後のUI更新（タイミングのみ）
+  setTimeout(() => {
+    loadingStep.textContent = "エージェント②：相互作用を解析中...";
+  }, 3000);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/check`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ drugs: valid })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "サーバーエラー");
+
+    loadingCard.style.display = "none";
+    renderResult(data);
+  } catch(e) {
+    loadingCard.style.display = "none";
+    showError("エラー: " + e.message + "\n（バックエンドが起動しているか確認してください）");
+  } finally {
+    btnRun.disabled = false;
+    updateRunBtn();
+  }
+});
+
+// ── 結果描画 ──
+function renderResult(data) {
+  const risk = RISK[data.risk_level] || RISK.none;
+  let html = "";
+
+  // ── 正規化結果 ──
+  if (data.normalized?.length) {
+    html += `<div class="card"><div class="card-label">Step 1 / 正規化結果</div>
+    <div class="normalized-list">`;
+    data.normalized.forEach(d => {
+      html += `<div class="drug-badge">
+        <div class="generic">${d.generic_name_ja}（${d.generic_name_en}）</div>
+        <div class="original">入力：${d.input}</div>
+        <div class="class">${d.drug_class}</div>
+      </div>`;
+    });
+    html += "</div>";
+    if (data.unrecognized?.length) {
+      html += `<div style="font-size:11px;color:#ff8888;">認識できなかった薬剤：${data.unrecognized.join("、")}</div>`;
+    }
+    html += "</div>";
+  }
+
+  // ── リスクサマリー ──
+  html += `<div class="risk-card card" style="border-left-color:${risk.color};border-color:${risk.color}30;background:${risk.color}08;">
+    <div class="risk-header">
+      <div class="risk-dot" style="background:${risk.color};box-shadow:0 0 8px ${risk.color};"></div>
+      <span class="risk-label" style="color:${risk.color};">総合リスク：${risk.label}</span>
+      <span class="risk-count">${data.interactions?.length||0}件の相互作用を検出</span>
+    </div>
+    <div class="risk-summary">${data.summary||""}</div>
+  </div>`;
+
+  // ── 推奨事項 ──
+  if (data.recommendations?.length) {
+    html += `<div class="card"><div class="card-label">推奨事項</div>`;
+    data.recommendations.forEach(r => {
+      html += `<div class="list-item"><span class="list-arrow">→</span><span>${r}</span></div>`;
+    });
+    html += "</div>";
+  }
+
+  // ── モニタリング ──
+  if (data.monitoring?.length) {
+    html += `<div class="card"><div class="card-label">モニタリング項目</div>`;
+    data.monitoring.forEach(m => {
+      html += `<div class="list-item"><span class="list-arrow">📊</span><span>${m}</span></div>`;
+    });
+    html += "</div>";
+  }
+
+  // ── 相互作用リスト ──
+  if (data.interactions?.length) {
+    html += `<div class="card-label" style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">Step 2 / 相互作用詳細</div>`;
+    data.interactions.forEach((item, i) => {
+      const cfg = SEV[item.severity] || SEV.minor;
+      const onsetLabel = ONSET_LABEL[item.onset] || "";
+      html += `
+      <div class="interaction-item" style="background:${cfg.bg};border:1px solid ${cfg.border};" id="item-${i}">
+        <button class="interaction-header" onclick="toggleItem(${i})">
+          <span class="interaction-icon">${cfg.icon}</span>
+          <div class="interaction-title">
+            <div class="drug-names">
+              <span class="drug-name">${item.drug_a}</span>
+              <span class="drug-sep">×</span>
+              <span class="drug-name">${item.drug_b}</span>
+              <span class="sev-badge" style="color:${cfg.color};border-color:${cfg.color}40;background:${cfg.color}15;">${cfg.label}</span>
+              ${onsetLabel?`<span class="onset-badge">${onsetLabel}</span>`:""}
+              ${item.evidence?`<span class="evidence-label">エビデンス：${item.evidence}</span>`:""}
+            </div>
+            <div class="interaction-effect">${item.effect||""}</div>
+          </div>
+          <span class="toggle-arrow" id="arrow-${i}">▾</span>
+        </button>
+        <div class="interaction-detail" id="detail-${i}" style="display:none;border-top-color:${cfg.border};">
+          <div class="detail-row">
+            <div class="detail-label">メカニズム</div>
+            <div class="detail-value" style="color:#7a9ac0;">${item.mechanism||""}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">臨床的影響</div>
+            <div class="detail-value" style="color:#7a9ac0;">${item.effect||""}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">対処法・モニタリング</div>
+            <div class="detail-value" style="color:${cfg.color};">${item.management||""}</div>
+          </div>
+          ${item.references?`<div class="detail-ref">参考：${item.references}</div>`:""}
+        </div>
+      </div>`;
+    });
+  } else {
+    html += `<div class="no-interaction">
+      <div class="check">✓</div>
+      <div class="msg">顕著な相互作用は検出されませんでした</div>
+      <div class="sub">引き続き添付文書および専門家の判断による確認を推奨します</div>
+    </div>`;
+  }
+
+  html += `<div class="disclaimer">⚠️ 本ツールはAIによる参考情報の提供を目的としています。最終的な処方判断・服薬指導は必ず薬剤師・医師が行ってください。添付文書・インタビューフォームを必ず参照し、個々の患者状態を考慮した判断を行ってください。</div>`;
+
+  resultArea.innerHTML = html;
+  resultArea.style.display = "block";
+  resultArea.className = "fade-up";
+  resultArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function toggleItem(i) {
+  const detail = document.getElementById(`detail-${i}`);
+  const arrow  = document.getElementById(`arrow-${i}`);
+  const isOpen = expandedIdx === i;
+  // 全部閉じる
+  document.querySelectorAll("[id^='detail-']").forEach(el => el.style.display = "none");
+  document.querySelectorAll("[id^='arrow-']").forEach(el => el.classList.remove("open"));
+  expandedIdx = null;
+  if (!isOpen) {
+    detail.style.display = "block";
+    arrow.classList.add("open");
+    expandedIdx = i;
+  }
+}
+
+function showError(msg) { errorBox.textContent = msg; errorBox.style.display = "block"; }
+function hideError()    { errorBox.style.display = "none"; }
+
+// 初期化
+renderInputs();
+</script>
+</body>
+</html>
