@@ -385,6 +385,7 @@ const ONSET_LABEL = { immediate:"即時", delayed:"遅延", unknown:"不明" };
 // ── 状態 ──
 let drugs = ["", ""];
 let expandedIdx = null;
+let lastResultData = null; // PDF生成用にデータを保持
 
 // ── DOM ──
 const drugListEl  = document.getElementById("drug-list");
@@ -476,6 +477,7 @@ btnRun.addEventListener("click", async () => {
     if (!res.ok) throw new Error(data.error || "サーバーエラー");
 
     loadingCard.style.display = "none";
+    lastResultData = data;
     renderResult(data);
   } catch(e) {
     loadingCard.style.display = "none";
@@ -592,7 +594,16 @@ function renderResult(data) {
     </div>`;
   }
 
-  html += `<div class="disclaimer">⚠️ 本ツールはAIによる参考情報の提供を目的としています。最終的な処方判断・服薬指導は必ず薬剤師・医師が行ってください。添付文書・インタビューフォームを必ず参照し、個々の患者状態を考慮した判断を行ってください。</div>`;
+  html += `
+  <div class="disclaimer">⚠️ 本ツールはAIによる参考情報の提供を目的としています。最終的な処方判断・服薬指導は必ず薬剤師・医師が行ってください。添付文書・インタビューフォームを必ず参照し、個々の患者状態を考慮した判断を行ってください。</div>
+  <button onclick="openPdfModal()" style="
+    width:100%; margin-top:16px; padding:13px;
+    background:#fff; border:2px solid var(--teal);
+    border-radius:14px; color:var(--teal);
+    font-family:var(--font); font-size:14px; font-weight:700;
+    cursor:pointer; transition:all 0.2s;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  ">📄 この結果をPDFで保存する</button>`;
 
   resultArea.innerHTML = html;
   resultArea.style.display = "block";
@@ -618,8 +629,260 @@ function toggleItem(i) {
 function showError(msg) { errorBox.textContent = msg; errorBox.style.display = "block"; }
 function hideError()    { errorBox.style.display = "none"; }
 
+// ── PDF モーダル ──
+function openPdfModal() {
+  document.getElementById("pdf-modal").style.display = "flex";
+  document.getElementById("pdf-patient-name").focus();
+}
+function closePdfModal() {
+  document.getElementById("pdf-modal").style.display = "none";
+}
+
+// ── PDF 生成（印刷ダイアログ経由） ──
+function generatePdf() {
+  const patientName = document.getElementById("pdf-patient-name").value.trim();
+  const memo        = document.getElementById("pdf-memo").value.trim();
+  closePdfModal();
+
+  // 印刷用コンテンツを構築
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+  const modeLabel = currentMode === "public" ? "一般向け" : "薬剤師・医療従事者向け";
+
+  // 現在の結果エリアからデータを取得
+  const resultEl = document.getElementById("result-area");
+  if (!resultEl || resultEl.style.display === "none") return;
+
+  // 印刷用ウィンドウを開く
+  const printWin = window.open("", "_blank", "width=800,height=900");
+  printWin.document.write(`<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>飲み合わせチェック結果</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', sans-serif; color: #1a1a1a; font-size: 12px; line-height: 1.7; padding: 20mm 15mm; }
+
+  /* ── ヘッダー ── */
+  .pdf-header { border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .pdf-title { font-size: 18px; font-weight: 700; }
+  .pdf-subtitle { font-size: 11px; color: #555; margin-top: 2px; }
+  .pdf-meta { text-align: right; font-size: 11px; color: #555; }
+  .pdf-meta .patient { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
+
+  /* ── セクション ── */
+  .section { margin-bottom: 16px; }
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 10px; }
+
+  /* ── 正規化バッジ ── */
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge { border: 1px solid #ccc; border-radius: 6px; padding: 4px 10px; font-size: 11px; }
+  .badge .name { font-weight: 700; }
+  .badge .sub { color: #666; font-size: 10px; }
+
+  /* ── リスクサマリー ── */
+  .risk-box { border: 1.5px solid; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .risk-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+  .risk-text { font-size: 11px; color: #333; line-height: 1.75; }
+
+  /* ── 相互作用テーブル ── */
+  .interaction-box { border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+  .interaction-head { background: #f5f5f5; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+  .int-names { font-size: 12px; font-weight: 700; }
+  .int-sep { color: #999; }
+  .sev-tag { font-size: 10px; font-weight: 700; border: 1.5px solid; border-radius: 4px; padding: 1px 6px; }
+  .interaction-body { padding: 10px 12px; display: grid; grid-template-columns: 80px 1fr; gap: 6px 8px; }
+  .int-label { font-size: 10px; font-weight: 700; color: #555; letter-spacing: 0.05em; padding-top: 1px; }
+  .int-value { font-size: 11px; color: #222; line-height: 1.65; }
+
+  /* ── リスト ── */
+  .list-item { display: flex; gap: 8px; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #eee; }
+  .list-item:last-child { border-bottom: none; }
+  .list-arrow { color: #333; flex-shrink: 0; font-weight: 700; }
+
+  /* ── メモ ── */
+  .memo-box { border: 1px solid #ccc; border-radius: 6px; padding: 10px 12px; font-size: 11px; color: #333; min-height: 40px; }
+
+  /* ── 注意書き ── */
+  .disclaimer { border: 1px solid #e0c840; background: #fffbe6; border-radius: 6px; padding: 8px 12px; font-size: 10px; color: #7a6020; margin-top: 16px; }
+
+  /* ── フッター ── */
+  .pdf-footer { margin-top: 20px; padding-top: 8px; border-top: 1px solid #ccc; font-size: 10px; color: #999; display: flex; justify-content: space-between; }
+
+  @media print {
+    body { padding: 0; }
+    @page { margin: 15mm 12mm; size: A4; }
+  }
+</style>
+</head>
+<body>
+<div class="pdf-header">
+  <div>
+    <div class="pdf-title">💊 飲み合わせチェック結果</div>
+    <div class="pdf-subtitle">AIによる参考情報 — ${modeLabel}</div>
+  </div>
+  <div class="pdf-meta">
+    ${patientName ? `<div class="patient">${patientName} 様</div>` : ""}
+    <div>確認日時：${dateStr}</div>
+  </div>
+</div>
+
+${lastResultData ? buildPdfBody(lastResultData, modeLabel) : ""}
+
+${memo ? `<div class="section"><div class="section-title">メモ・備考</div><div class="memo-box">${memo.replace(/\n/g,"<br>")}</div></div>` : ""}
+
+<div class="disclaimer">⚠️ 本資料はAIによる参考情報です。最終的な判断は必ず薬剤師・医師にご相談ください。添付文書の内容に基づいていますが、個々の状態により判断が異なる場合があります。</div>
+
+<div class="pdf-footer">
+  <span>飲み合わせチェッカー（AI支援）</span>
+  <span>このPDFは薬剤師・医師への相談時にお使いください</span>
+</div>
+
+<script>window.onload = function(){ window.print(); }<\/script>
+</body></html>`);
+  printWin.document.close();
+}
+
+function buildPdfBody(data, modeLabel) {
+  const isPublic = data.mode === "public";
+  const SEV_COLORS = {
+    contraindicated: "#cc0000",
+    major:           "#cc6600",
+    moderate:        "#cc9900",
+    minor:           "#2a7a4a",
+  };
+  const SEV_LABELS_PH = { contraindicated:"禁忌", major:"重大", moderate:"中程度", minor:"軽微" };
+  const SEV_LABELS_PUB = { contraindicated:"危険な組み合わせ", major:"要注意", moderate:"注意", minor:"軽い注意" };
+  const SEV_LABELS = isPublic ? SEV_LABELS_PUB : SEV_LABELS_PH;
+  const RISK_LABELS = { high:"高リスク", moderate:"要注意", low:"低リスク", none:"問題なし" };
+  const RISK_COLORS = { high:"#cc0000", moderate:"#cc9900", low:"#2a7a4a", none:"#336699" };
+
+  let html = "";
+
+  // 正規化結果
+  if (data.normalized?.length) {
+    const catLabel = { drug:"💊", food:"🥦", supplement:"🌿" };
+    html += `<div class="section"><div class="section-title">確認した薬・食品・サプリメント</div><div class="badges">`;
+    data.normalized.forEach(d => {
+      html += `<div class="badge">
+        <div class="name">${catLabel[d.category]||""} ${d.generic_name_ja}</div>
+        <div class="sub">入力：${d.input}｜${d.drug_class}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // リスクサマリー
+  const riskColor = RISK_COLORS[data.risk_level] || "#336699";
+  const riskLabel = RISK_LABELS[data.risk_level] || "-";
+  html += `<div class="section"><div class="section-title">総合評価</div>
+  <div class="risk-box" style="border-color:${riskColor};">
+    <div class="risk-title" style="color:${riskColor};">● 総合リスク：${riskLabel}　（${data.interactions?.length||0}件の組み合わせを確認）</div>
+    <div class="risk-text">${data.summary||""}</div>
+  </div></div>`;
+
+  // 相互作用詳細
+  if (data.interactions?.length) {
+    const detailLabel = isPublic ? "なぜ問題になるか" : "メカニズム";
+    const effectLabel = isPublic ? "体への影響" : "臨床的影響";
+    const mgmtLabel   = isPublic ? "どうすればいい？" : "対処法・モニタリング";
+
+    html += `<div class="section"><div class="section-title">組み合わせの詳細</div>`;
+    data.interactions.forEach(item => {
+      const color = SEV_COLORS[item.severity] || "#333";
+      const label = SEV_LABELS[item.severity] || item.severity;
+      html += `<div class="interaction-box">
+        <div class="interaction-head">
+          <span class="int-names">${item.drug_a} <span class="int-sep">×</span> ${item.drug_b}</span>
+          <span class="sev-tag" style="color:${color};border-color:${color};">${label}</span>
+        </div>
+        <div class="interaction-body">
+          <span class="int-label">${detailLabel}</span><span class="int-value">${item.mechanism||""}</span>
+          <span class="int-label">${effectLabel}</span><span class="int-value">${item.effect||""}</span>
+          <span class="int-label">${mgmtLabel}</span><span class="int-value">${item.management||""}</span>
+          ${item.references ? `<span class="int-label">参考</span><span class="int-value">${item.references}</span>` : ""}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // 推奨事項
+  if (data.recommendations?.length) {
+    html += `<div class="section"><div class="section-title">推奨事項</div>`;
+    data.recommendations.forEach(r => {
+      html += `<div class="list-item"><span class="list-arrow">→</span><span>${r}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  // モニタリング
+  if (data.monitoring?.length) {
+    html += `<div class="section"><div class="section-title">${isPublic ? "日常生活で注意すること" : "モニタリング項目"}</div>`;
+    data.monitoring.forEach(m => {
+      html += `<div class="list-item"><span class="list-arrow">📋</span><span>${m}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  return html;
+}
+
 // 初期化
 renderInputs();
 </script>
-</body>
-</html>
+<!-- PDF モーダル -->
+<div id="pdf-modal" style="
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.4); z-index:200;
+  align-items:center; justify-content:center; padding:20px;
+">
+  <div style="
+    background:#fff; border-radius:20px;
+    padding:28px; width:100%; max-width:420px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.2);
+  ">
+    <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px;">📄 PDFで保存</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:20px;font-weight:500;">以下の情報を入力してください（任意）</div>
+
+    <div style="margin-bottom:14px;">
+      <label style="font-size:12px;font-weight:700;color:var(--text2);display:block;margin-bottom:6px;">患者名・お名前</label>
+      <input id="pdf-patient-name" type="text" placeholder="例：山田 太郎" style="
+        width:100%; padding:10px 14px;
+        border:1.5px solid var(--border); border-radius:10px;
+        font-family:var(--font); font-size:14px; color:var(--text);
+        background:var(--bg); outline:none;
+      ">
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label style="font-size:12px;font-weight:700;color:var(--text2);display:block;margin-bottom:6px;">メモ・備考（任意）</label>
+      <textarea id="pdf-memo" placeholder="例：次回受診時に医師に確認する" rows="3" style="
+        width:100%; padding:10px 14px;
+        border:1.5px solid var(--border); border-radius:10px;
+        font-family:var(--font); font-size:13px; color:var(--text);
+        background:var(--bg); outline:none; resize:vertical;
+      "></textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;">
+      <button onclick="closePdfModal()" style="
+        flex:1; padding:11px;
+        background:#fff; border:1.5px solid var(--border);
+        border-radius:12px; color:var(--muted);
+        font-family:var(--font); font-size:13px; font-weight:700;
+        cursor:pointer;
+      ">キャンセル</button>
+      <button onclick="generatePdf()" style="
+        flex:2; padding:11px;
+        background:linear-gradient(135deg,var(--teal),var(--teal2));
+        border:none; border-radius:12px; color:#fff;
+        font-family:var(--font); font-size:13px; font-weight:700;
+        cursor:pointer; box-shadow:0 4px 12px rgba(13,158,126,0.3);
+      ">📄 PDFを生成する</button>
+    </div>
+  </div>
+</div>
+
+</body></html>
