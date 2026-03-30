@@ -266,7 +266,7 @@
 <main>
   <!-- 入力セクション -->
   <div class="card" id="input-card">
-    <div class="card-label">01 / 薬剤入力（製品名・一般名 混在OK）</div>
+    <div class="card-label">01 / 入力（薬剤・食品・サプリメント 混在OK）</div>
     <div id="drug-list"></div>
     <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
       <button class="btn-add" id="btn-add">+ 薬剤を追加</button>
@@ -283,8 +283,8 @@
   <!-- ローディング -->
   <div class="card loading-card" id="loading-card" style="display:none;">
     <div class="spinner"></div>
-    <div class="loading-step" id="loading-step">エージェント①：薬剤名を正規化中...</div>
-    <div class="loading-sub">製品名→一般名の変換・表記揺れを統一しています</div>
+    <div class="loading-step" id="loading-step">エージェント①：薬剤名・食品・サプリを正規化中...</div>
+    <div class="loading-sub">製品名→一般名の変換・食品・サプリメントの標準化をしています</div>
   </div>
 
   <!-- 結果 -->
@@ -293,7 +293,7 @@
 
 <script>
 // ── 設定 ──
-const API_BASE = "https://drug-checker-api.onrender.com";
+const API_BASE = "http://localhost:3001"; // ローカル開発時
 // const API_BASE = "https://your-app.onrender.com"; // デプロイ時はここを変更
 
 // ── 重篤度設定 ──
@@ -333,7 +333,7 @@ function renderInputs() {
     row.innerHTML = `
       <span class="drug-num">${String(i+1).padStart(2,"0")}</span>
       <input class="drug-input" type="text" value="${d}"
-        placeholder="薬剤名 ${i+1}（例：バイアスピリン、ワーファリン）"
+        placeholder="薬剤・食品・サプリ ${i+1}（例：ワーファリン、納豆、グレープフルーツ）"
         data-idx="${i}" />
       <button class="btn-remove" data-idx="${i}" ${drugs.length<=2?"disabled":""}>×</button>
     `;
@@ -347,7 +347,7 @@ function renderInputs() {
 function updateRunBtn() {
   const valid = drugs.filter(d => d.trim()).length;
   btnRun.disabled = valid < 2;
-  btnRun.textContent = `▶ ${valid}剤の相互作用を解析`;
+  btnRun.textContent = `▶ ${valid}件の相互作用を解析`;
 }
 
 // イベント委譲
@@ -424,16 +424,18 @@ function renderResult(data) {
   if (data.normalized?.length) {
     html += `<div class="card"><div class="card-label">Step 1 / 正規化結果</div>
     <div class="normalized-list">`;
+    const categoryLabel = { drug:"💊 薬剤", food:"🥦 食品", supplement:"🌿 サプリ" };
     data.normalized.forEach(d => {
+      const catLabel = categoryLabel[d.category] || d.category;
       html += `<div class="drug-badge">
         <div class="generic">${d.generic_name_ja}（${d.generic_name_en}）</div>
         <div class="original">入力：${d.input}</div>
-        <div class="class">${d.drug_class}</div>
+        <div class="class">${catLabel}｜${d.drug_class}</div>
       </div>`;
     });
     html += "</div>";
     if (data.unrecognized?.length) {
-      html += `<div style="font-size:11px;color:#ff8888;">認識できなかった薬剤：${data.unrecognized.join("、")}</div>`;
+      html += `<div style="font-size:11px;color:#ff8888;">認識できなかった項目：${data.unrecognized.join("、")}</div>`;
     }
     html += "</div>";
   }
