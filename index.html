@@ -264,12 +264,22 @@
 </header>
 
 <main>
+  <!-- モード切り替え -->
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button id="btn-mode-pharmacist" onclick="setMode('pharmacist')" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(59,130,246,0.5);background:rgba(59,130,246,0.15);color:#7aa4c8;font-family:var(--font);font-size:12px;cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;">
+      💊 薬剤師・医療従事者向け
+    </button>
+    <button id="btn-mode-public" onclick="setMode('public')" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font);font-size:12px;cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;">
+      🙋 一般の方向け
+    </button>
+  </div>
+
   <!-- 入力セクション -->
   <div class="card" id="input-card">
     <div class="card-label">01 / 入力（薬剤・食品・サプリメント 混在OK）</div>
     <div id="drug-list"></div>
     <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
-      <button class="btn-add" id="btn-add">+ 薬剤を追加</button>
+      <button class="btn-add" id="btn-add">+ 追加</button>
       <span style="font-size:11px;color:var(--dim);" id="drug-count">2/10</span>
     </div>
   </div>
@@ -278,7 +288,7 @@
   <div class="error-box" id="error-box" style="display:none;"></div>
 
   <!-- 実行ボタン -->
-  <button class="btn-run" id="btn-run">▶ 相互作用を解析</button>
+  <button class="btn-run" id="btn-run">▶ 飲み合わせを確認</button>
 
   <!-- ローディング -->
   <div class="card loading-card" id="loading-card" style="display:none;">
@@ -294,7 +304,30 @@
 <script>
 // ── 設定 ──
 const API_BASE = "https://drug-checker-api.onrender.com";
-// const API_BASE = "https://your-app.onrender.com"; // デプロイ時はここを変更
+
+// ── モード管理 ──
+let currentMode = "pharmacist";
+
+function setMode(mode) {
+  currentMode = mode;
+  const btnP   = document.getElementById("btn-mode-pharmacist");
+  const btnPub = document.getElementById("btn-mode-public");
+  if (mode === "pharmacist") {
+    btnP.style.cssText   += ";background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.5);color:#7aa4c8;";
+    btnPub.style.cssText += ";background:transparent;border-color:rgba(100,150,220,0.14);color:#4a6a8a;";
+  } else {
+    btnPub.style.cssText += ";background:rgba(76,175,138,0.15);border-color:rgba(76,175,138,0.5);color:#4caf8a;";
+    btnP.style.cssText   += ";background:transparent;border-color:rgba(100,150,220,0.14);color:#4a6a8a;";
+  }
+}
+
+// ── 一般向けラベル変換 ──
+const SEV_PUBLIC = {
+  contraindicated: { label:"危険な組み合わせ", color:"#ff4444", bg:"rgba(255,68,68,0.1)",   border:"rgba(255,68,68,0.3)",   icon:"⛔" },
+  major:           { label:"要注意",           color:"#ff8c00", bg:"rgba(255,140,0,0.1)",   border:"rgba(255,140,0,0.3)",   icon:"⚠️" },
+  moderate:        { label:"注意",             color:"#f0b429", bg:"rgba(240,180,41,0.1)",  border:"rgba(240,180,41,0.3)",  icon:"⚡" },
+  minor:           { label:"軽い注意",         color:"#4caf8a", bg:"rgba(76,175,138,0.1)", border:"rgba(76,175,138,0.3)", icon:"ℹ️" },
+};
 
 // ── 重篤度設定 ──
 const SEV = {
@@ -398,7 +431,7 @@ btnRun.addEventListener("click", async () => {
     const res = await fetch(`${API_BASE}/api/check`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ drugs: valid })
+      body: JSON.stringify({ drugs: valid, mode: currentMode })
     });
 
     const data = await res.json();
@@ -417,6 +450,8 @@ btnRun.addEventListener("click", async () => {
 
 // ── 結果描画 ──
 function renderResult(data) {
+  const isPublic = data.mode === "public";
+  const sevConfig = isPublic ? SEV_PUBLIC : SEV;
   const risk = RISK[data.risk_level] || RISK.none;
   let html = "";
 
@@ -472,8 +507,11 @@ function renderResult(data) {
   if (data.interactions?.length) {
     html += `<div class="card-label" style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">Step 2 / 相互作用詳細</div>`;
     data.interactions.forEach((item, i) => {
-      const cfg = SEV[item.severity] || SEV.minor;
+      const cfg = sevConfig[item.severity] || sevConfig.minor;
       const onsetLabel = ONSET_LABEL[item.onset] || "";
+      const detailLabel = isPublic ? "なぜ問題になるか" : "メカニズム";
+      const effectLabel = isPublic ? "体への影響" : "臨床的影響";
+      const managementLabel = isPublic ? "どうすればいい？" : "対処法・モニタリング";
       html += `
       <div class="interaction-item" style="background:${cfg.bg};border:1px solid ${cfg.border};" id="item-${i}">
         <button class="interaction-header" onclick="toggleItem(${i})">
@@ -485,7 +523,7 @@ function renderResult(data) {
               <span class="drug-name">${item.drug_b}</span>
               <span class="sev-badge" style="color:${cfg.color};border-color:${cfg.color}40;background:${cfg.color}15;">${cfg.label}</span>
               ${onsetLabel?`<span class="onset-badge">${onsetLabel}</span>`:""}
-              ${item.evidence?`<span class="evidence-label">エビデンス：${item.evidence}</span>`:""}
+              ${!isPublic && item.evidence?`<span class="evidence-label">エビデンス：${item.evidence}</span>`:""}
             </div>
             <div class="interaction-effect">${item.effect||""}</div>
           </div>
@@ -493,15 +531,15 @@ function renderResult(data) {
         </button>
         <div class="interaction-detail" id="detail-${i}" style="display:none;border-top-color:${cfg.border};">
           <div class="detail-row">
-            <div class="detail-label">メカニズム</div>
+            <div class="detail-label">${detailLabel}</div>
             <div class="detail-value" style="color:#7a9ac0;">${item.mechanism||""}</div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">臨床的影響</div>
+            <div class="detail-label">${effectLabel}</div>
             <div class="detail-value" style="color:#7a9ac0;">${item.effect||""}</div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">対処法・モニタリング</div>
+            <div class="detail-label">${managementLabel}</div>
             <div class="detail-value" style="color:${cfg.color};">${item.management||""}</div>
           </div>
           ${item.references?`<div class="detail-ref">参考：${item.references}</div>`:""}
