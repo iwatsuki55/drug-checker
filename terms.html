@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>利用規約・免責事項・プライバシーポリシー | くすり飲み合わせナビ</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal: #0d9e7e; --teal2: #0bb896; --teal-light: #e8f8f3;
+  --bg: #f7faf8; --white: #ffffff; --text: #1a3a30; --text2: #3a6458;
+  --muted: #6a9e90; --border: #d0e8de; --border2: #e8f0ec;
+  --shadow: 0 2px 12px rgba(13,158,126,0.08);
+  --font: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
+}
+body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.8; }
+header {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.header-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.back-link { margin-left: auto; font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 600; }
+.tab-nav { background: var(--white); border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; }
+.tab-btn {
+  flex: 1; min-width: 100px; padding: 13px 8px;
+  border: none; background: transparent; font-family: var(--font);
+  font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer;
+  border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s;
+}
+.tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+main { max-width: 720px; margin: 0 auto; padding: 32px 20px 60px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.page-title { font-size: 22px; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+.page-date { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+.section {
+  background: var(--white); border-radius: 14px; padding: 20px 22px;
+  margin-bottom: 16px; border: 1px solid var(--border2); box-shadow: var(--shadow);
+}
+.section h2 {
+  font-size: 15px; font-weight: 700; color: var(--teal);
+  margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.section p { font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+.section p:last-child { margin-bottom: 0; }
+.section ul { padding-left: 18px; }
+.section li { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+.important-box {
+  background: #fff8e0; border: 1.5px solid #f0d080; border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 16px; font-size: 13px; color: #7a6020; line-height: 1.8;
+}
+.important-box strong { color: #5a4010; }
+footer { background: var(--text); color: rgba(255,255,255,0.6); padding: 24px 20px; text-align: center; }
+.footer-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
+.footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 11px; }
+.footer-copy { font-size: 11px; color: rgba(255,255,255,0.3); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">💊</div>
+  <div class="header-title">くすり飲み合わせナビ</div>
+  <a href="./landing.html" class="back-link">← トップへ</a>
+</header>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('terms', this)">利用規約</button>
+  <button class="tab-btn" onclick="switchTab('disclaimer', this)">免責事項</button>
+  <button class="tab-btn" onclick="switchTab('privacy', this)">プライバシー</button>
+</div>
+
+<main>
+
+  <!-- 利用規約 -->
+  <div id="tab-terms" class="tab-content active">
+    <h1 class="page-title">利用規約</h1>
+    <p class="page-date">制定日：2026年4月2日</p>
+
+    <div class="important-box">
+      <strong>⚠️ 重要：</strong>本サービスは医療行為ではありません。提供される情報はAIによる参考情報であり、最終的な判断は必ず薬剤師・医師にご相談ください。
+    </div>
+
+    <div class="section">
+      <h2>第1条（サービスの概要）</h2>
+      <p>「くすり飲み合わせナビ」（以下「本サービス」）は、薬・食品・サプリメントの飲み合わせに関する参考情報をAIを用いて提供するサービスです。</p>
+      <p>本サービスは医療診断・処方・治療の代替を目的とするものではありません。</p>
+    </div>
+
+    <div class="section">
+      <h2>第2条（利用条件）</h2>
+      <p>本サービスをご利用いただくにあたり、以下の事項に同意いただく必要があります。</p>
+      <ul>
+        <li>本サービスが提供する情報はAIによる参考情報であることを理解していること</li>
+        <li>医療上の最終判断は医師・薬剤師に委ねることに同意していること</li>
+        <li>本サービスを医療診断・治療の代替として使用しないこと</li>
+        <li>本サービスの情報を第三者への医療アドバイスとして使用しないこと</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>第3条（禁止事項）</h2>
+      <ul>
+        <li>本サービスへの不正アクセスまたは過度な負荷をかける行為</li>
+        <li>本サービスの情報を医療診断として第三者に提供する行為</li>
+        <li>本サービスのシステムを解析・複製・改ざんする行為</li>
+        <li>法令または公序良俗に反する目的での利用</li>
+        <li>その他、運営者が不適切と判断する行為</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>第4条（知的財産権）</h2>
+      <p>本サービスのデザイン・コード・コンテンツに関する知的財産権は運営者に帰属します。</p>
+      <p>チェック結果のPDF出力は個人の参考利用に限り許可します。</p>
+    </div>
+
+    <div class="section">
+      <h2>第5条（サービスの変更・終了）</h2>
+      <p>運営者は予告なくサービスの内容変更・停止・終了を行うことができます。これによりユーザーに生じた損害について、運営者は責任を負いません。</p>
+    </div>
+
+    <div class="section">
+      <h2>第6条（規約の変更）</h2>
+      <p>本規約は必要に応じて変更することがあります。変更後も本サービスを継続してご利用いただいた場合、変更後の規約に同意したものとみなします。</p>
+    </div>
+
+    <div class="section">
+      <h2>第7条（準拠法・管轄）</h2>
+      <p>本規約の解釈は日本法に準拠し、本サービスに関する紛争は運営者の所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とします。</p>
+    </div>
+  </div>
+
+  <!-- 免責事項 -->
+  <div id="tab-disclaimer" class="tab-content">
+    <h1 class="page-title">免責事項</h1>
+    <p class="page-date">制定日：2026年4月2日</p>
+
+    <div class="important-box">
+      <strong>⚠️ 最重要事項：</strong>本サービスで提供される飲み合わせ情報は、医師・薬剤師による医療行為の代替となるものではありません。必ず専門家にご相談ください。
+    </div>
+
+    <div class="section">
+      <h2>AIによる情報提供について</h2>
+      <p>本サービスはAI（人工知能）を使用して飲み合わせ情報を提供しています。AIは添付文書等の情報を参照しますが、以下の点にご注意ください。</p>
+      <ul>
+        <li>AIの回答は最新の医療情報を完全に反映していない場合があります</li>
+        <li>個々の体質・病状・他の服薬状況により適切な判断は異なります</li>
+        <li>添付文書の内容が更新されていても反映されていない可能性があります</li>
+        <li>AIの判断には誤りが含まれる可能性があります</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>医療行為ではありません</h2>
+      <p>本サービスが提供する情報は以下に該当しません。</p>
+      <ul>
+        <li>医師による診断・処方</li>
+        <li>薬剤師による服薬指導</li>
+        <li>医療上の推奨・指示</li>
+      </ul>
+      <p>飲み合わせに不安がある場合は、必ずかかりつけの医師または薬剤師にご相談ください。</p>
+    </div>
+
+    <div class="section">
+      <h2>損害賠償の免責</h2>
+      <p>本サービスの利用により生じたいかなる損害（直接損害・間接損害・健康被害等）についても、運営者は一切の責任を負いません。本サービスの情報を参考にした行動による結果は、すべてご利用者ご自身の責任となります。</p>
+    </div>
+
+    <div class="section">
+      <h2>外部リンクについて</h2>
+      <p>本サービスに掲載される外部リンク先のコンテンツについて、運営者は責任を負いません。外部サービスの利用はご自身の判断でお願いします。</p>
+    </div>
+
+    <div class="section">
+      <h2>広告・アフィリエイトについて</h2>
+      <p>本サービスはサービス維持のため、広告・アフィリエイトリンクを掲載する場合があります。掲載される広告・商品は飲み合わせチェックの結果とは独立しており、特定の商品・サービスを医療上推奨するものではありません。</p>
+    </div>
+  </div>
+
+  <!-- プライバシーポリシー -->
+  <div id="tab-privacy" class="tab-content">
+    <h1 class="page-title">プライバシーポリシー</h1>
+    <p class="page-date">制定日：2026年4月2日</p>
+
+    <div class="section">
+      <h2>収集する情報</h2>
+      <p>本サービスでは以下の情報を収集する場合があります。</p>
+      <ul>
+        <li><strong>入力情報：</strong>薬・食品・サプリの名前（チェック実行のためにAI APIに送信されます）</li>
+        <li><strong>アクセスログ：</strong>IPアドレス、ブラウザの種類、アクセス日時（サービス改善目的）</li>
+        <li><strong>Cookieなどの技術情報：</strong>Google Analytics等のアクセス解析ツールを使用する場合があります</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>個人情報の取り扱い</h2>
+      <ul>
+        <li>入力された薬剤名等はAI APIの処理後、サーバーに保存されません</li>
+        <li>PDF出力で入力した患者名はブラウザ内のみで処理され、サーバーには送信されません</li>
+        <li>収集した情報は第三者への販売・提供は行いません</li>
+        <li>法令に基づく開示要求がある場合を除き、情報を第三者に開示しません</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>第三者サービスの利用</h2>
+      <p>本サービスは以下の第三者サービスを利用しています。</p>
+      <ul>
+        <li><strong>Anthropic Claude API：</strong>飲み合わせ解析のためのAI処理（入力された薬剤名を送信）</li>
+        <li><strong>Google Fonts：</strong>フォント表示のため</li>
+        <li><strong>Google Analytics（導入予定）：</strong>アクセス解析のため</li>
+      </ul>
+      <p>各サービスのプライバシーポリシーは各社のウェブサイトをご確認ください。</p>
+    </div>
+
+    <div class="section">
+      <h2>Cookieについて</h2>
+      <p>本サービスはアクセス解析のためCookieを使用する場合があります。ブラウザの設定によりCookieを無効化することができますが、一部機能が制限される場合があります。</p>
+    </div>
+
+    <div class="section">
+      <h2>ポリシーの変更</h2>
+      <p>本ポリシーは必要に応じて変更することがあります。重要な変更がある場合はサービス内でお知らせします。</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="./landing.html">トップ</a>
+    <a href="./index.html">チェックツール</a>
+  </div>
+  <p class="footer-copy">© 2026 くすり飲み合わせナビ</p>
+</footer>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
