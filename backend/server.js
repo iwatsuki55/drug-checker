@@ -406,7 +406,7 @@ app.post("/api/check", async (req, res) => {
 
     const normalizeRes = await client.messages.create({
       model: "claude-haiku-4-5",
-      max_tokens: 1024,
+      max_tokens: 2048,
       system: NORMALIZE_PROMPT,
       messages: [{
         role: "user",
@@ -435,7 +435,7 @@ app.post("/api/check", async (req, res) => {
 
     const interactionRes = await client.messages.create({
       model: "claude-haiku-4-5",
-      max_tokens: 2048,
+      max_tokens: 6144,
       system: interactionPrompt,
       messages: [{
         role: "user",
@@ -444,7 +444,19 @@ app.post("/api/check", async (req, res) => {
     });
 
     const interactionRaw = interactionRes.content.map(c => c.text || "").join("");
-    const interactionData = JSON.parse(interactionRaw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim());
+    let interactionData;
+    try {
+      interactionData = JSON.parse(interactionRaw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim());
+    } catch (parseErr) {
+      console.error("[Agent2] JSON parse失敗 stop_reason:", interactionRes.stop_reason);
+      console.error("[Agent2] 生レスポンス末尾200文字:", interactionRaw.slice(-200));
+      if (interactionRes.stop_reason === "max_tokens") {
+        return res.status(500).json({
+          error: "応答が長すぎて出力が途中で切れました。薬剤の数を減らすか、しばらくしてから再度お試しください。"
+        });
+      }
+      throw parseErr;
+    }
 
     console.log("[Agent2] チェック完了:", interactionData.interactions?.length, "件");
 
