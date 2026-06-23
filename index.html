@@ -8,48 +8,48 @@
   /* ── リセット & ベース ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0b1120;
-    --surface: rgba(255,255,255,0.03);
-    --border: rgba(100,150,220,0.14);
-    --text: #dde6f0;
-    --muted: #4a6a8a;
-    --dim: #243550;
-    --blue: #3b82f6;
-    --cyan: #06b6d4;
-    --green: #4caf8a;
-    --red: #ff4444;
-    --orange: #ff8c00;
-    --yellow: #f0b429;
-    --font: 'DM Mono', 'Courier New', monospace;
+    --bg: #F0F4F8;
+    --surface: #FFFFFF;
+    --border: #D8E8E4;
+    --text: #1C2B2A;
+    --muted: #6B8E8A;
+    --dim: #9ABAB6;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --blue: #185FA5;
+    --green: #3B6D11;
+    --red: #E24B4A;
+    --orange: #BA7517;
+    --yellow: #EF9F27;
+    --font: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
   }
   body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
 
   /* ── ヘッダー ── */
   header {
     border-bottom: 1px solid var(--border);
-    padding: 18px 28px;
+    padding: 14px 28px;
     display: flex; align-items: center; gap: 14px;
-    background: rgba(255,255,255,0.02);
+    background: #FFFFFF;
     position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 8px rgba(26,107,92,0.08);
   }
   .logo {
     width: 34px; height: 34px;
-    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    background: #1D9E75;
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     font-size: 12px; font-weight: 700; color: #fff;
-    box-shadow: 0 0 16px rgba(59,130,246,0.4);
     flex-shrink: 0;
   }
   .header-title { font-size: 14px; font-weight: 600; }
   .header-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 1px; }
   .status-dot {
     width: 6px; height: 6px; border-radius: 50%;
-    background: var(--green); box-shadow: 0 0 8px var(--green);
+    background: #1D9E75;
     animation: pulse 2s infinite;
   }
-  .status-label { font-size: 10px; color: var(--green); letter-spacing: 0.08em; }
+  .status-label { font-size: 11px; color: #1D9E75; letter-spacing: 0.06em; }
   .header-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
 
   /* ── メイン ── */
@@ -57,11 +57,12 @@
 
   /* ── カード ── */
   .card {
-    background: var(--surface);
+    background: #FFFFFF;
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 22px 24px;
     margin-bottom: 18px;
+    box-shadow: 0 1px 6px rgba(26,107,92,0.06);
   }
   .card-label {
     font-size: 10px; color: var(--muted);
@@ -74,7 +75,7 @@
   .drug-num { font-size: 11px; color: var(--dim); min-width: 24px; text-align: right; }
   .drug-input {
     flex: 1;
-    background: rgba(255,255,255,0.04);
+    background: #FAFCFC;
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 9px 12px;
@@ -84,7 +85,7 @@
     outline: none;
     transition: all 0.2s;
   }
-  .drug-input:focus { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.07); }
+  .drug-input:focus { border-color: #1D9E75; background: #E1F5EE; }
   .drug-input::placeholder { color: var(--dim); }
   .btn-remove {
     width: 26px; height: 26px;
@@ -99,9 +100,9 @@
 
   .btn-add {
     background: transparent;
-    border: 1px dashed rgba(100,150,220,0.25);
+    border: 1px dashed #1D9E75;
     border-radius: 8px; padding: 7px 14px;
-    color: var(--muted); font-size: 12px;
+    color: #1D9E75; font-size: 12px;
     font-family: var(--font); cursor: pointer;
     transition: all 0.2s;
   }
@@ -110,7 +111,7 @@
   /* ── 実行ボタン ── */
   .btn-run {
     width: 100%; padding: 13px;
-    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    background: #1D9E75;
     border: none; border-radius: 10px;
     color: #fff; font-size: 14px; font-weight: 600;
     font-family: var(--font); cursor: pointer;
@@ -252,14 +253,20 @@
 <body>
 
 <header>
-  <div class="logo">Rx</div>
-  <div>
-    <div class="header-title">相互作用チェッカー</div>
-    <div class="header-sub">DRUG INTERACTION ANALYZER — 2-AGENT AI SYSTEM</div>
-  </div>
+  <a href="../" style="text-decoration:none;display:flex;align-items:center;gap:12px;">
+    <div class="logo">Rx</div>
+    <div>
+      <div class="header-title" style="color:#1C2B2A;">相互作用チェッカー</div>
+      <div class="header-sub">くすり飲み合わせナビ</div>
+    </div>
+  </a>
   <div class="header-right">
     <div class="status-dot"></div>
-    <span class="status-label">CLAUDE POWERED</span>
+    <span class="status-label">AI POWERED</span>
+    <a href="../" style="margin-left:12px;font-size:12px;color:#1D9E75;text-decoration:none;
+      border:1px solid #1D9E75;padding:5px 12px;border-radius:20px;">
+      ← TOPへ戻る
+    </a>
   </div>
 </header>
 
