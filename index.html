@@ -3,222 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="薬・食品・サプリの飲み合わせをAIが無料でチェック。ワーファリン、グレープフルーツ、納豆など。製品名のまま入力OK。登録不要・スマホ対応。">
-<title>薬の飲み合わせチェッカー【無料・AI】｜くすり飲み合わせナビ</title>
- <link rel="canonical" href="https://iwatsuki55.github.io/drug-checker/index.html">
-<meta property="og:title" content="薬の飲み合わせチェッカー【無料・AI】｜くすり飲み合わせナビ">
-<meta property="og:description" content="薬・食品・サプリの飲み合わせをAIが無料チェック。製品名のまま入力OK。登録不要・スマホ対応。">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://iwatsuki55.github.io/drug-checker/index.html">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="薬の飲み合わせチェッカー【無料・AI】｜くすり飲み合わせナビ">
-<meta name="twitter:description" content="薬・食品・サプリの飲み合わせをAIが無料チェック。登録不要・スマホ対応。">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<title>相互作用チェッカー | Drug Interaction Analyzer</title>
 <style>
+  /* ── リセット & ベース ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f0f7f5;
-    --bg2: #e6f2ef;
-    --surface: #ffffff;
-    --border: #c8e3dc;
-    --border2: #ddeee9;
-    --text: #1a3a30;
-    --text2: #3a6458;
-    --muted: #6a9e90;
-    --dim: #a0c4bb;
-    --teal: #0d9e7e;
-    --teal2: #0bb896;
-    --teal-light: #e0f5f0;
-    --sage: #52a98b;
-    --mint: #b8ede0;
-    --red: #e05252;
-    --orange: #e07a30;
-    --yellow: #c9960a;
-    --green: #2a9d6e;
-    --shadow: 0 2px 12px rgba(13,158,126,0.08);
-    --shadow2: 0 4px 24px rgba(13,158,126,0.13);
-    --font: 'Nunito', 'Noto Sans JP', sans-serif;
+    --bg: #0b1120;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(100,150,220,0.14);
+    --text: #dde6f0;
+    --muted: #4a6a8a;
+    --dim: #243550;
+    --blue: #3b82f6;
+    --cyan: #06b6d4;
+    --green: #4caf8a;
+    --red: #ff4444;
+    --orange: #ff8c00;
+    --yellow: #f0b429;
+    --font: 'DM Mono', 'Courier New', monospace;
   }
-
-  body {
-    background: var(--bg);
-    background-image:
-      radial-gradient(circle at 20% 20%, rgba(13,158,126,0.06) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(82,169,139,0.05) 0%, transparent 50%);
-    color: var(--text);
-    font-family: var(--font);
-    min-height: 100vh;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
 
   /* ── ヘッダー ── */
   header {
-    background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 16px 28px;
+    padding: 18px 28px;
     display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.02);
     position: sticky; top: 0; z-index: 100;
-    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
   }
   .logo {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, var(--teal), var(--teal2));
-    border-radius: 12px;
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 800; color: #fff;
-    box-shadow: 0 4px 12px rgba(13,158,126,0.35);
+    font-size: 12px; font-weight: 700; color: #fff;
+    box-shadow: 0 0 16px rgba(59,130,246,0.4);
     flex-shrink: 0;
   }
-  .header-title { font-size: 16px; font-weight: 800; color: var(--text); }
-  .header-sub { font-size: 11px; color: var(--muted); margin-top: 1px; font-weight: 500; }
+  .header-title { font-size: 14px; font-weight: 600; }
+  .header-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 1px; }
   .status-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 0 2px rgba(42,157,110,0.2);
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
     animation: pulse 2s infinite;
   }
-  .status-label { font-size: 11px; color: var(--green); font-weight: 600; }
+  .status-label { font-size: 10px; color: var(--green); letter-spacing: 0.08em; }
   .header-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
 
   /* ── メイン ── */
-  main { max-width: 740px; margin: 0 auto; padding: 32px 20px 60px; }
+  main { max-width: 740px; margin: 0 auto; padding: 36px 20px 60px; }
 
   /* ── カード ── */
   .card {
     background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 18px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
     padding: 22px 24px;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow);
+    margin-bottom: 18px;
   }
   .card-label {
-    font-size: 11px; color: var(--muted);
-    font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .card-label::before {
-    content: ''; width: 3px; height: 12px;
-    background: var(--teal); border-radius: 2px;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 16px;
   }
 
   /* ── 入力行 ── */
   .drug-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .drug-num {
-    font-size: 11px; color: var(--dim); min-width: 22px;
-    text-align: center; font-weight: 700;
-    background: var(--teal-light); border-radius: 50%;
-    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  .drug-num { font-size: 11px; color: var(--dim); min-width: 24px; text-align: right; }
   .drug-input {
     flex: 1;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
     color: var(--text);
-    font-size: 14px;
+    font-size: 13px;
     font-family: var(--font);
-    font-weight: 500;
     outline: none;
     transition: all 0.2s;
   }
-  .drug-input:focus {
-    border-color: var(--teal);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(13,158,126,0.1);
-  }
-  .drug-input::placeholder { color: var(--dim); font-weight: 400; }
+  .drug-input:focus { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.07); }
+  .drug-input::placeholder { color: var(--dim); }
   .btn-remove {
-    width: 28px; height: 28px;
-    background: #fff; border: 1.5px solid var(--border);
-    border-radius: 8px; color: var(--dim);
-    cursor: pointer; font-size: 14px;
+    width: 26px; height: 26px;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted);
+    cursor: pointer; font-size: 13px;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.15s; flex-shrink: 0;
   }
-  .btn-remove:hover { border-color: #e05252; color: #e05252; background: #fff5f5; }
+  .btn-remove:hover { border-color: rgba(255,68,68,0.4); color: #ff8888; }
   .btn-remove:disabled { cursor: default; opacity: 0.3; }
 
   .btn-add {
-    background: var(--teal-light);
-    border: 1.5px dashed var(--teal);
-    border-radius: 10px; padding: 8px 16px;
-    color: var(--teal); font-size: 13px;
-    font-family: var(--font); font-weight: 600;
-    cursor: pointer; transition: all 0.2s;
+    background: transparent;
+    border: 1px dashed rgba(100,150,220,0.25);
+    border-radius: 8px; padding: 7px 14px;
+    color: var(--muted); font-size: 12px;
+    font-family: var(--font); cursor: pointer;
+    transition: all 0.2s;
   }
-  .btn-add:hover { background: var(--mint); }
+  .btn-add:hover { border-color: rgba(59,130,246,0.4); color: #7aa4c8; }
 
   /* ── 実行ボタン ── */
   .btn-run {
-    width: 100%; padding: 14px;
-    background: linear-gradient(135deg, var(--teal), var(--teal2));
-    border: none; border-radius: 14px;
-    color: #fff; font-size: 15px; font-weight: 800;
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    border: none; border-radius: 10px;
+    color: #fff; font-size: 14px; font-weight: 600;
     font-family: var(--font); cursor: pointer;
-    letter-spacing: 0.03em; margin-bottom: 24px;
-    box-shadow: 0 6px 20px rgba(13,158,126,0.35);
+    letter-spacing: 0.06em; margin-bottom: 28px;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
     transition: all 0.2s;
   }
-  .btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(13,158,126,0.4); }
-  .btn-run:active { transform: translateY(0); }
+  .btn-run:hover { filter: brightness(1.08); }
   .btn-run:disabled {
-    background: var(--border);
+    background: rgba(59,130,246,0.15);
     color: var(--dim); cursor: default;
-    box-shadow: none; transform: none;
+    box-shadow: none;
   }
 
   /* ── エラー ── */
   .error-box {
-    background: #fff5f5;
-    border: 1.5px solid #f5c0c0;
-    border-radius: 12px; padding: 12px 16px;
-    font-size: 13px; color: #c04040;
-    margin-bottom: 16px; font-weight: 500;
+    background: rgba(255,68,68,0.08);
+    border: 1px solid rgba(255,68,68,0.25);
+    border-radius: 10px; padding: 11px 15px;
+    font-size: 13px; color: #ff8888;
+    margin-bottom: 16px;
   }
 
   /* ── ローディング ── */
   .loading-card { text-align: center; }
   .spinner {
-    width: 40px; height: 40px;
-    border: 3px solid var(--border);
-    border-top: 3px solid var(--teal);
+    width: 36px; height: 36px;
+    border: 2px solid rgba(59,130,246,0.2);
+    border-top: 2px solid var(--blue);
     border-radius: 50%;
-    margin: 0 auto 16px;
+    margin: 0 auto 14px;
     animation: spin 1s linear infinite;
   }
-  .loading-step { font-size: 14px; color: var(--text2); margin-bottom: 4px; font-weight: 600; }
-  .loading-sub { font-size: 12px; color: var(--muted); }
+  .loading-step {
+    font-size: 13px; color: var(--muted); margin-bottom: 4px;
+  }
+  .loading-sub { font-size: 11px; color: var(--dim); }
 
   /* ── 正規化バッジ ── */
-  .normalized-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-  .drug-badge {
-    background: var(--teal-light);
-    border: 1.5px solid var(--mint);
-    border-radius: 10px; padding: 7px 12px;
-    font-size: 12px;
+  .normalized-list {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
   }
-  .drug-badge .generic { color: var(--teal); font-weight: 700; }
-  .drug-badge .original { color: var(--muted); font-size: 10px; margin-top: 2px; }
-  .drug-badge .class { color: var(--muted); font-size: 10px; font-weight: 600; }
+  .drug-badge {
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 6px; padding: 5px 10px;
+    font-size: 11px;
+  }
+  .drug-badge .generic { color: #7aa4c8; }
+  .drug-badge .original { color: var(--dim); font-size: 10px; margin-top: 1px; }
+  .drug-badge .class { color: var(--dim); font-size: 10px; }
 
   /* ── リスクサマリー ── */
   .risk-card {
-    border-left: 4px solid;
-    border-radius: 14px;
+    border-left: 3px solid;
+    border-radius: 12px;
     padding: 18px 22px;
     margin-bottom: 16px;
   }
   .risk-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-  .risk-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .risk-label { font-size: 13px; font-weight: 800; letter-spacing: 0.02em; }
-  .risk-count { font-size: 11px; color: var(--muted); margin-left: auto; font-weight: 600; }
-  .risk-summary { font-size: 13px; color: var(--text2); line-height: 1.85; font-weight: 500; }
+  .risk-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .risk-label { font-size: 11px; letter-spacing: 0.08em; }
+  .risk-count { font-size: 11px; color: var(--dim); margin-left: auto; }
+  .risk-summary { font-size: 12px; color: #7a9ac0; line-height: 1.8; }
 
   /* ── 相互作用アイテム ── */
-  .interaction-item { border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+  .interaction-item {
+    border-radius: 12px; margin-bottom: 10px; overflow: hidden;
+  }
   .interaction-header {
     width: 100%; background: transparent; border: none;
     padding: 14px 18px; cursor: pointer;
@@ -226,101 +187,89 @@
     text-align: left; color: var(--text);
     font-family: var(--font); transition: all 0.15s;
   }
-  .interaction-header:hover { filter: brightness(0.97); }
-  .interaction-icon { font-size: 16px; flex-shrink: 0; }
+  .interaction-header:hover { filter: brightness(1.05); }
+  .interaction-icon { font-size: 14px; flex-shrink: 0; }
   .interaction-title { flex: 1; }
   .drug-names { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 3px; }
-  .drug-name { font-size: 14px; font-weight: 700; }
-  .drug-sep { font-size: 12px; color: var(--muted); }
-  .sev-badge { font-size: 11px; border-radius: 6px; padding: 2px 8px; border: 1.5px solid; font-weight: 700; }
-  .onset-badge {
-    font-size: 10px; color: var(--muted);
-    border: 1px solid var(--border); border-radius: 6px;
-    padding: 1px 7px; background: #fff; font-weight: 600;
+  .drug-name { font-size: 13px; font-weight: 600; }
+  .drug-sep { font-size: 11px; color: var(--dim); }
+  .sev-badge {
+    font-size: 10px; border-radius: 4px;
+    padding: 1px 7px; border: 1px solid;
   }
-  .evidence-label { font-size: 10px; color: var(--muted); margin-left: auto; font-weight: 600; }
-  .interaction-effect { font-size: 12px; color: var(--text2); font-weight: 500; }
-  .toggle-arrow { font-size: 12px; color: var(--dim); transition: transform 0.2s; flex-shrink: 0; }
+  .onset-badge {
+    font-size: 10px; color: var(--dim);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .evidence-label { font-size: 10px; color: var(--dim); margin-left: auto; }
+  .interaction-effect { font-size: 11px; color: var(--muted); }
+  .toggle-arrow { font-size: 11px; color: var(--dim); transition: transform 0.2s; flex-shrink: 0; }
   .toggle-arrow.open { transform: rotate(180deg); }
 
   .interaction-detail { padding: 0 18px 18px; border-top: 1px solid; }
   .detail-row { padding-top: 14px; }
-  .detail-label {
-    font-size: 10px; color: var(--muted); font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px;
-  }
-  .detail-value { font-size: 13px; line-height: 1.75; font-weight: 500; }
-  .detail-ref { font-size: 11px; color: var(--dim); margin-top: 5px; }
+  .detail-label { font-size: 10px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 3px; }
+  .detail-value { font-size: 12px; line-height: 1.7; }
+  .detail-ref { font-size: 11px; color: var(--dim); margin-top: 4px; }
 
   /* ── no-interaction ── */
   .no-interaction {
-    text-align: center; padding: 32px;
-    background: linear-gradient(135deg, #f0fff8, #e8f8f2);
-    border: 1.5px solid var(--mint);
-    border-radius: 16px;
+    text-align: center; padding: 24px;
+    background: rgba(76,175,138,0.06);
+    border: 1px solid rgba(76,175,138,0.2);
+    border-radius: 12px;
   }
-  .no-interaction .check { font-size: 32px; margin-bottom: 8px; }
-  .no-interaction .msg { font-size: 15px; color: var(--green); font-weight: 700; }
-  .no-interaction .sub { font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 500; }
+  .no-interaction .check { font-size: 22px; margin-bottom: 6px; }
+  .no-interaction .msg { font-size: 13px; color: var(--green); }
+  .no-interaction .sub { font-size: 11px; color: #1a4030; margin-top: 4px; }
 
   /* ── 推奨・モニタリング ── */
   .list-item {
-    display: flex; gap: 10px; font-size: 13px;
-    color: var(--text2); line-height: 1.75; padding: 6px 0;
-    border-bottom: 1px solid var(--border2); font-weight: 500;
+    display: flex; gap: 10px; font-size: 12px;
+    color: #6a94bc; line-height: 1.7; padding: 3px 0;
+    border-bottom: 1px solid rgba(100,150,220,0.06);
   }
   .list-item:last-child { border-bottom: none; }
-  .list-arrow { color: var(--teal); flex-shrink: 0; font-weight: 700; }
+  .list-arrow { color: #2a5a7a; flex-shrink: 0; }
 
   /* ── 注意書き ── */
   .disclaimer {
-    margin-top: 20px; padding: 14px 18px;
-    background: #fffbea;
-    border: 1.5px solid #f0d080;
-    border-radius: 12px;
-    font-size: 12px; color: #7a6020; line-height: 1.8; font-weight: 500;
+    margin-top: 20px; padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(100,150,220,0.08);
+    border-radius: 10px;
+    font-size: 11px; color: var(--dim); line-height: 1.8;
   }
 
   /* ── アニメーション ── */
   @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes pulse { 0%,100% { opacity:1; box-shadow: 0 0 0 2px rgba(42,157,110,0.2); } 50% { opacity:.6; box-shadow: 0 0 0 4px rgba(42,157,110,0.1); } }
-  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-  .fade-up { animation: fadeUp 0.4s ease; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp 0.35s ease; }
 </style>
 </head>
 <body>
 
 <header>
-  <a href="./landing.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex:1;">
-    <div class="logo" style="font-size:18px;">💊</div>
-    <div>
-      <div class="header-title">くすり飲み合わせナビ</div>
-      <div class="header-sub">薬・食品・サプリの組み合わせを確認</div>
-    </div>
-  </a>
+  <div class="logo">Rx</div>
+  <div>
+    <div class="header-title">相互作用チェッカー</div>
+    <div class="header-sub">DRUG INTERACTION ANALYZER — 2-AGENT AI SYSTEM</div>
+  </div>
   <div class="header-right">
     <div class="status-dot"></div>
-    <span class="status-label" style="font-size:10px;">AI</span>
+    <span class="status-label">CLAUDE POWERED</span>
   </div>
 </header>
 
 <main>
-  <!-- モード切り替え -->
-  <div style="display:flex;gap:8px;margin-bottom:16px;">
-    <button id="btn-mode-pharmacist" onclick="setMode('pharmacist')" style="flex:1;padding:11px;border-radius:12px;border:2px solid var(--teal);background:var(--teal-light);color:var(--teal);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;">
-      👩‍⚕️ 医療従事者向け
-    </button>
-    <button id="btn-mode-public" onclick="setMode('public')" style="flex:1;padding:11px;border-radius:12px;border:2px solid var(--border);background:#fff;color:var(--muted);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;">
-      🙋 一般の方向け
-    </button>
-  </div>
-
   <!-- 入力セクション -->
   <div class="card" id="input-card">
-    <div class="card-label">01 / 入力（薬剤・食品・サプリメント 混在OK）</div>
+    <div class="card-label">01 / 薬剤入力（製品名・一般名 混在OK）</div>
     <div id="drug-list"></div>
     <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
-      <button class="btn-add" id="btn-add">+ 追加</button>
+      <button class="btn-add" id="btn-add">+ 薬剤を追加</button>
       <span style="font-size:11px;color:var(--dim);" id="drug-count">2/10</span>
     </div>
   </div>
@@ -329,13 +278,13 @@
   <div class="error-box" id="error-box" style="display:none;"></div>
 
   <!-- 実行ボタン -->
-  <button class="btn-run" id="btn-run">▶ 飲み合わせを確認</button>
+  <button class="btn-run" id="btn-run">▶ 相互作用を解析</button>
 
   <!-- ローディング -->
   <div class="card loading-card" id="loading-card" style="display:none;">
     <div class="spinner"></div>
-    <div class="loading-step" id="loading-step">エージェント①：薬剤名・食品・サプリを正規化中...</div>
-    <div class="loading-sub">製品名→一般名の変換・食品・サプリメントの標準化をしています</div>
+    <div class="loading-step" id="loading-step">エージェント①：薬剤名を正規化中...</div>
+    <div class="loading-sub">製品名→一般名の変換・表記揺れを統一しています</div>
   </div>
 
   <!-- 結果 -->
@@ -345,38 +294,7 @@
 <script>
 // ── 設定 ──
 const API_BASE = "https://drug-checker-api.onrender.com";
-
-// ── モード管理 ──
-let currentMode = "pharmacist";
-
-function setMode(mode) {
-  currentMode = mode;
-  const btnP   = document.getElementById("btn-mode-pharmacist");
-  const btnPub = document.getElementById("btn-mode-public");
-  if (mode === "pharmacist") {
-    btnP.style.background   = "var(--teal-light)";
-    btnP.style.borderColor  = "var(--teal)";
-    btnP.style.color        = "var(--teal)";
-    btnPub.style.background = "#fff";
-    btnPub.style.borderColor= "var(--border)";
-    btnPub.style.color      = "var(--muted)";
-  } else {
-    btnPub.style.background = "#f0fff8";
-    btnPub.style.borderColor= "var(--sage)";
-    btnPub.style.color      = "var(--sage)";
-    btnP.style.background   = "#fff";
-    btnP.style.borderColor  = "var(--border)";
-    btnP.style.color        = "var(--muted)";
-  }
-}
-
-// ── 一般向けラベル変換 ──
-const SEV_PUBLIC = {
-  contraindicated: { label:"危険な組み合わせ", color:"#ff4444", bg:"rgba(255,68,68,0.1)",   border:"rgba(255,68,68,0.3)",   icon:"⛔" },
-  major:           { label:"要注意",           color:"#ff8c00", bg:"rgba(255,140,0,0.1)",   border:"rgba(255,140,0,0.3)",   icon:"⚠️" },
-  moderate:        { label:"注意",             color:"#f0b429", bg:"rgba(240,180,41,0.1)",  border:"rgba(240,180,41,0.3)",  icon:"⚡" },
-  minor:           { label:"軽い注意",         color:"#4caf8a", bg:"rgba(76,175,138,0.1)", border:"rgba(76,175,138,0.3)", icon:"ℹ️" },
-};
+// const API_BASE = "https://your-app.onrender.com"; // デプロイ時はここを変更
 
 // ── 重篤度設定 ──
 const SEV = {
@@ -396,7 +314,6 @@ const ONSET_LABEL = { immediate:"即時", delayed:"遅延", unknown:"不明" };
 // ── 状態 ──
 let drugs = ["", ""];
 let expandedIdx = null;
-let lastResultData = null; // PDF生成用にデータを保持
 
 // ── DOM ──
 const drugListEl  = document.getElementById("drug-list");
@@ -416,7 +333,7 @@ function renderInputs() {
     row.innerHTML = `
       <span class="drug-num">${String(i+1).padStart(2,"0")}</span>
       <input class="drug-input" type="text" value="${d}"
-        placeholder="薬剤・食品・サプリ ${i+1}（例：ワーファリン、納豆、グレープフルーツ）"
+        placeholder="薬剤名 ${i+1}（例：バイアスピリン、ワーファリン）"
         data-idx="${i}" />
       <button class="btn-remove" data-idx="${i}" ${drugs.length<=2?"disabled":""}>×</button>
     `;
@@ -430,7 +347,7 @@ function renderInputs() {
 function updateRunBtn() {
   const valid = drugs.filter(d => d.trim()).length;
   btnRun.disabled = valid < 2;
-  btnRun.textContent = `▶ ${valid}件の相互作用を解析`;
+  btnRun.textContent = `▶ ${valid}剤の相互作用を解析`;
 }
 
 // イベント委譲
@@ -481,14 +398,13 @@ btnRun.addEventListener("click", async () => {
     const res = await fetch(`${API_BASE}/api/check`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ drugs: valid, mode: currentMode })
+      body: JSON.stringify({ drugs: valid })
     });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "サーバーエラー");
 
     loadingCard.style.display = "none";
-    lastResultData = data;
     renderResult(data);
   } catch(e) {
     loadingCard.style.display = "none";
@@ -501,8 +417,6 @@ btnRun.addEventListener("click", async () => {
 
 // ── 結果描画 ──
 function renderResult(data) {
-  const isPublic = data.mode === "public";
-  const sevConfig = isPublic ? SEV_PUBLIC : SEV;
   const risk = RISK[data.risk_level] || RISK.none;
   let html = "";
 
@@ -510,18 +424,16 @@ function renderResult(data) {
   if (data.normalized?.length) {
     html += `<div class="card"><div class="card-label">Step 1 / 正規化結果</div>
     <div class="normalized-list">`;
-    const categoryLabel = { drug:"💊 薬剤", food:"🥦 食品", supplement:"🌿 サプリ" };
     data.normalized.forEach(d => {
-      const catLabel = categoryLabel[d.category] || d.category;
       html += `<div class="drug-badge">
         <div class="generic">${d.generic_name_ja}（${d.generic_name_en}）</div>
         <div class="original">入力：${d.input}</div>
-        <div class="class">${catLabel}｜${d.drug_class}</div>
+        <div class="class">${d.drug_class}</div>
       </div>`;
     });
     html += "</div>";
     if (data.unrecognized?.length) {
-      html += `<div style="font-size:11px;color:#ff8888;">認識できなかった項目：${data.unrecognized.join("、")}</div>`;
+      html += `<div style="font-size:11px;color:#ff8888;">認識できなかった薬剤：${data.unrecognized.join("、")}</div>`;
     }
     html += "</div>";
   }
@@ -545,14 +457,6 @@ function renderResult(data) {
     html += "</div>";
   }
 
-  // ── 広告①：高・中リスク → 血圧計 ──
-  if (data.risk_level === "high" || data.risk_level === "moderate") {
-    html += adBlock("🩺 血圧のモニタリングに", [
-      { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00scsq4.2bo113c4.g00scsq4.2bo12481%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flife-rhythm%252Fhcr-750at%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flife-rhythm%252Fi%252F10000473%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/life-rhythm/cabinet/item01/11845472/hcr-750at_v2.jpg?_ex=64x64", name:"オムロン 上腕式血圧計（スマホ連動）", price:"12,800円〜" },
-      { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00s8b04.2bo11aa6.g00s8b04.2bo12f59%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fgbft-ltd%252Fjc-z5g6-0pya%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fgbft-ltd%252Fi%252F10035296%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/gbft-ltd/cabinet/image52/jc-z5g6-0pya_deco.jpg?_ex=64x64", name:"テルモ アームイン血圧計", price:"11,390円" },
-    ]);
-  }
-
   // ── モニタリング ──
   if (data.monitoring?.length) {
     html += `<div class="card"><div class="card-label">モニタリング項目</div>`;
@@ -562,21 +466,12 @@ function renderResult(data) {
     html += "</div>";
   }
 
-  // ── 広告②：薬ケース（常時表示） ──
-  html += adBlock("💊 お薬の管理・飲み忘れ防止に", [
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qlaf4.2bo11620.g00qlaf4.2bo129f8%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkirara-pla%252F10001220%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkirara-pla%252Fi%252F10001220%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/kirara-pla/cabinet/syuunou/kusuri/imgrc0107433596.jpg?_ex=64x64", name:"週間くすりケース（シール付き・介護対応）", price:"4,000円" },
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q7284.2bo1132b.g00q7284.2bo127b9%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flivingut%252F4973228170250%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flivingut%252Fi%252F10063368%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/livingut/cabinet/maker_shinko_hg/4973228170250.jpg?_ex=64x64", name:"くすり整理ボックス（1日3回分・飲み忘れ防止）", price:"2,130円" },
-  ]);
-
   // ── 相互作用リスト ──
   if (data.interactions?.length) {
     html += `<div class="card-label" style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">Step 2 / 相互作用詳細</div>`;
     data.interactions.forEach((item, i) => {
-      const cfg = sevConfig[item.severity] || sevConfig.minor;
+      const cfg = SEV[item.severity] || SEV.minor;
       const onsetLabel = ONSET_LABEL[item.onset] || "";
-      const detailLabel = isPublic ? "なぜ問題になるか" : "メカニズム";
-      const effectLabel = isPublic ? "体への影響" : "臨床的影響";
-      const managementLabel = isPublic ? "どうすればいい？" : "対処法・モニタリング";
       html += `
       <div class="interaction-item" style="background:${cfg.bg};border:1px solid ${cfg.border};" id="item-${i}">
         <button class="interaction-header" onclick="toggleItem(${i})">
@@ -588,7 +483,7 @@ function renderResult(data) {
               <span class="drug-name">${item.drug_b}</span>
               <span class="sev-badge" style="color:${cfg.color};border-color:${cfg.color}40;background:${cfg.color}15;">${cfg.label}</span>
               ${onsetLabel?`<span class="onset-badge">${onsetLabel}</span>`:""}
-              ${!isPublic && item.evidence?`<span class="evidence-label">エビデンス：${item.evidence}</span>`:""}
+              ${item.evidence?`<span class="evidence-label">エビデンス：${item.evidence}</span>`:""}
             </div>
             <div class="interaction-effect">${item.effect||""}</div>
           </div>
@@ -596,15 +491,15 @@ function renderResult(data) {
         </button>
         <div class="interaction-detail" id="detail-${i}" style="display:none;border-top-color:${cfg.border};">
           <div class="detail-row">
-            <div class="detail-label">${detailLabel}</div>
+            <div class="detail-label">メカニズム</div>
             <div class="detail-value" style="color:#7a9ac0;">${item.mechanism||""}</div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">${effectLabel}</div>
+            <div class="detail-label">臨床的影響</div>
             <div class="detail-value" style="color:#7a9ac0;">${item.effect||""}</div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">${managementLabel}</div>
+            <div class="detail-label">対処法・モニタリング</div>
             <div class="detail-value" style="color:${cfg.color};">${item.management||""}</div>
           </div>
           ${item.references?`<div class="detail-ref">参考：${item.references}</div>`:""}
@@ -619,16 +514,21 @@ function renderResult(data) {
     </div>`;
   }
 
-  html += `
-  <div class="disclaimer">⚠️ 本ツールはAIによる参考情報の提供を目的としています。最終的な処方判断・服薬指導は必ず薬剤師・医師が行ってください。添付文書・インタビューフォームを必ず参照し、個々の患者状態を考慮した判断を行ってください。</div>
-  <button onclick="openPdfModal()" style="
-    width:100%; margin-top:16px; padding:13px;
-    background:#fff; border:2px solid var(--teal);
-    border-radius:14px; color:var(--teal);
-    font-family:var(--font); font-size:14px; font-weight:700;
-    cursor:pointer; transition:all 0.2s;
-    display:flex; align-items:center; justify-content:center; gap:8px;
-  ">📄 この結果をPDFで保存する</button>`;
+  html += `<div class="disclaimer">⚠️ 本ツールはAIによる参考情報の提供を目的としています。最終的な処方判断・服薬指導は必ず薬剤師・医師が行ってください。添付文書・インタビューフォームを必ず参照し、個々の患者状態を考慮した判断を行ってください。</div>`;
+
+  // ── 広告①：高・中リスク → 血圧計 ──
+  if (data.risk_level === "high" || data.risk_level === "moderate") {
+    html += adBlock("🩺 血圧のモニタリングに", [
+      { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00scsq4.2bo113c4.g00scsq4.2bo12481%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flife-rhythm%252Fhcr-750at%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flife-rhythm%252Fi%252F10000473%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/life-rhythm/cabinet/item01/11845472/hcr-750at_v2.jpg?_ex=64x64", name:"オムロン 上腕式血圧計（スマホ連動）", price:"12,800円〜" },
+      { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00s8b04.2bo11aa6.g00s8b04.2bo12f59%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fgbft-ltd%252Fjc-z5g6-0pya%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fgbft-ltd%252Fi%252F10035296%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/gbft-ltd/cabinet/image52/jc-z5g6-0pya_deco.jpg?_ex=64x64", name:"テルモ アームイン血圧計", price:"11,390円" },
+    ]);
+  }
+
+  // ── 広告②：薬ケース（常時表示） ──
+  html += adBlock("💊 お薬の管理・飲み忘れ防止に", [
+    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qlaf4.2bo11620.g00qlaf4.2bo129f8%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkirara-pla%252F10001220%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkirara-pla%252Fi%252F10001220%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/kirara-pla/cabinet/syuunou/kusuri/imgrc0107433596.jpg?_ex=64x64", name:"週間くすりケース（シール付き・介護対応）", price:"4,000円" },
+    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q7284.2bo1132b.g00q7284.2bo127b9%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flivingut%252F4973228170250%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flivingut%252Fi%252F10063368%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/livingut/cabinet/maker_shinko_hg/4973228170250.jpg?_ex=64x64", name:"くすり整理ボックス（1日3回分・飲み忘れ防止）", price:"2,130円" },
+  ]);
 
   // ── 広告③：サプリ（常時表示） ──
   html += adBlock("🌿 健康維持・サプリメント", [
@@ -637,6 +537,7 @@ function renderResult(data) {
     { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tcof4.2bo11e24.g00tcof4.2bo12e4d%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fduen1102%252F90000001-03%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fduen1102%252Fi%252F10000060%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/duen1102/cabinet/08563445/08862152/imgrc0131124536.jpg?_ex=64x64", name:"シボヘルシ 90日分（機能性表示食品・内臓脂肪サポート）", price:"3,980円" },
   ]);
 
+  // A8計測タグ
   html += `<img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=4B1BLJ+4784FM+2HOM+BWGDT" alt="">
   <img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=4B1BLJ+4784FM+2HOM+BWGDT" alt="">`;
 
@@ -648,26 +549,29 @@ function renderResult(data) {
 
 // ── 広告ブロック生成ヘルパー ──
 function adBlock(title, items) {
-  let html = `<div style="margin-top:16px;margin-bottom:16px;padding:16px 18px;background:#f7faf8;border:1px solid var(--border);border-radius:14px;">
-    <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:0.06em;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
-      <span style="width:3px;height:11px;background:var(--teal);border-radius:2px;display:inline-block;"></span>
-      ${title}
-      <span style="margin-left:auto;font-size:10px;color:var(--dim);font-weight:400;">※広告</span>
-    </div>`;
+  const isDark = true; // frontend版はダークテーマ
+  let h = `<div style="margin:20px 0;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(100,150,220,0.14);border-radius:12px;">
+    <div style="font-size:10px;color:#4a6a8a;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">PR / おすすめ商品</div>
+    <div style="font-size:13px;font-weight:600;color:#dde6f0;margin-bottom:12px;">${title}</div>`;
   items.forEach((item, i) => {
     const isLast = i === items.length - 1;
-    html += `<div style="background:#fff;border:1px solid var(--border2);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:center;${isLast ? "" : "margin-bottom:8px;"}">
-      <a href="${item.href}" rel="nofollow" style="flex-shrink:0;">
-        <img style="width:52px;height:52px;object-fit:contain;border-radius:6px;" src="${item.img}" alt="${item.name}">
-      </a>
+    h += `<a href="${item.href}" target="_blank" rel="noopener sponsored"
+      style="display:flex;gap:10px;align-items:center;text-decoration:none;
+        padding:10px 12px;border-radius:8px;
+        background:rgba(255,255,255,0.04);border:1px solid rgba(100,150,220,0.1);
+        ${isLast ? "" : "margin-bottom:8px;"}
+        transition:background .15s;">
+      <img src="${item.img}" alt="${item.name}" width="52" height="52"
+        style="border-radius:6px;object-fit:cover;flex-shrink:0;">
       <div style="flex:1;min-width:0;">
-        <a href="${item.href}" rel="nofollow" style="font-size:12px;font-weight:700;color:var(--text);text-decoration:none;display:block;line-height:1.45;margin-bottom:3px;">${item.name}</a>
-        <div style="font-size:13px;color:#c00;font-weight:700;">${item.price}</div>
+        <div style="font-size:12px;font-weight:600;color:#dde6f0;line-height:1.4;margin-bottom:3px;">${item.name}</div>
+        <div style="font-size:11px;color:#4a6a8a;">${item.price}</div>
       </div>
-    </div>`;
+      <div style="font-size:11px;color:#3b82f6;flex-shrink:0;">楽天 ›</div>
+    </a>`;
   });
-  html += `</div>`;
-  return html;
+  h += `</div>`;
+  return h;
 }
 
 function toggleItem(i) {
@@ -688,260 +592,8 @@ function toggleItem(i) {
 function showError(msg) { errorBox.textContent = msg; errorBox.style.display = "block"; }
 function hideError()    { errorBox.style.display = "none"; }
 
-// ── PDF モーダル ──
-function openPdfModal() {
-  document.getElementById("pdf-modal").style.display = "flex";
-  document.getElementById("pdf-patient-name").focus();
-}
-function closePdfModal() {
-  document.getElementById("pdf-modal").style.display = "none";
-}
-
-// ── PDF 生成（印刷ダイアログ経由） ──
-function generatePdf() {
-  const patientName = document.getElementById("pdf-patient-name").value.trim();
-  const memo        = document.getElementById("pdf-memo").value.trim();
-  closePdfModal();
-
-  // 印刷用コンテンツを構築
-  const now = new Date();
-  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-  const modeLabel = currentMode === "public" ? "一般向け" : "薬剤師・医療従事者向け";
-
-  // 現在の結果エリアからデータを取得
-  const resultEl = document.getElementById("result-area");
-  if (!resultEl || resultEl.style.display === "none") return;
-
-  // 印刷用ウィンドウを開く
-  const printWin = window.open("", "_blank", "width=800,height=900");
-  printWin.document.write(`<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>飲み合わせチェック結果</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', sans-serif; color: #1a1a1a; font-size: 12px; line-height: 1.7; padding: 20mm 15mm; }
-
-  /* ── ヘッダー ── */
-  .pdf-header { border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
-  .pdf-title { font-size: 18px; font-weight: 700; }
-  .pdf-subtitle { font-size: 11px; color: #555; margin-top: 2px; }
-  .pdf-meta { text-align: right; font-size: 11px; color: #555; }
-  .pdf-meta .patient { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
-
-  /* ── セクション ── */
-  .section { margin-bottom: 16px; }
-  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 10px; }
-
-  /* ── 正規化バッジ ── */
-  .badges { display: flex; flex-wrap: wrap; gap: 6px; }
-  .badge { border: 1px solid #ccc; border-radius: 6px; padding: 4px 10px; font-size: 11px; }
-  .badge .name { font-weight: 700; }
-  .badge .sub { color: #666; font-size: 10px; }
-
-  /* ── リスクサマリー ── */
-  .risk-box { border: 1.5px solid; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
-  .risk-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-  .risk-text { font-size: 11px; color: #333; line-height: 1.75; }
-
-  /* ── 相互作用テーブル ── */
-  .interaction-box { border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
-  .interaction-head { background: #f5f5f5; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
-  .int-names { font-size: 12px; font-weight: 700; }
-  .int-sep { color: #999; }
-  .sev-tag { font-size: 10px; font-weight: 700; border: 1.5px solid; border-radius: 4px; padding: 1px 6px; }
-  .interaction-body { padding: 10px 12px; display: grid; grid-template-columns: 80px 1fr; gap: 6px 8px; }
-  .int-label { font-size: 10px; font-weight: 700; color: #555; letter-spacing: 0.05em; padding-top: 1px; }
-  .int-value { font-size: 11px; color: #222; line-height: 1.65; }
-
-  /* ── リスト ── */
-  .list-item { display: flex; gap: 8px; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #eee; }
-  .list-item:last-child { border-bottom: none; }
-  .list-arrow { color: #333; flex-shrink: 0; font-weight: 700; }
-
-  /* ── メモ ── */
-  .memo-box { border: 1px solid #ccc; border-radius: 6px; padding: 10px 12px; font-size: 11px; color: #333; min-height: 40px; }
-
-  /* ── 注意書き ── */
-  .disclaimer { border: 1px solid #e0c840; background: #fffbe6; border-radius: 6px; padding: 8px 12px; font-size: 10px; color: #7a6020; margin-top: 16px; }
-
-  /* ── フッター ── */
-  .pdf-footer { margin-top: 20px; padding-top: 8px; border-top: 1px solid #ccc; font-size: 10px; color: #999; display: flex; justify-content: space-between; }
-
-  @media print {
-    body { padding: 0; }
-    @page { margin: 15mm 12mm; size: A4; }
-  }
-</style>
-</head>
-<body>
-<div class="pdf-header">
-  <div>
-    <div class="pdf-title">💊 飲み合わせチェック結果</div>
-    <div class="pdf-subtitle">AIによる参考情報 — ${modeLabel}</div>
-  </div>
-  <div class="pdf-meta">
-    ${patientName ? `<div class="patient">${patientName} 様</div>` : ""}
-    <div>確認日時：${dateStr}</div>
-  </div>
-</div>
-
-${lastResultData ? buildPdfBody(lastResultData, modeLabel) : ""}
-
-${memo ? `<div class="section"><div class="section-title">メモ・備考</div><div class="memo-box">${memo.replace(/\n/g,"<br>")}</div></div>` : ""}
-
-<div class="disclaimer">⚠️ 本資料はAIによる参考情報です。最終的な判断は必ず薬剤師・医師にご相談ください。添付文書の内容に基づいていますが、個々の状態により判断が異なる場合があります。</div>
-
-<div class="pdf-footer">
-  <span>飲み合わせチェッカー（AI支援）</span>
-  <span>このPDFは薬剤師・医師への相談時にお使いください</span>
-</div>
-
-<script>window.onload = function(){ window.print(); }<\/script>
-</body></html>`);
-  printWin.document.close();
-}
-
-function buildPdfBody(data, modeLabel) {
-  const isPublic = data.mode === "public";
-  const SEV_COLORS = {
-    contraindicated: "#cc0000",
-    major:           "#cc6600",
-    moderate:        "#cc9900",
-    minor:           "#2a7a4a",
-  };
-  const SEV_LABELS_PH = { contraindicated:"禁忌", major:"重大", moderate:"中程度", minor:"軽微" };
-  const SEV_LABELS_PUB = { contraindicated:"危険な組み合わせ", major:"要注意", moderate:"注意", minor:"軽い注意" };
-  const SEV_LABELS = isPublic ? SEV_LABELS_PUB : SEV_LABELS_PH;
-  const RISK_LABELS = { high:"高リスク", moderate:"要注意", low:"低リスク", none:"問題なし" };
-  const RISK_COLORS = { high:"#cc0000", moderate:"#cc9900", low:"#2a7a4a", none:"#336699" };
-
-  let html = "";
-
-  // 正規化結果
-  if (data.normalized?.length) {
-    const catLabel = { drug:"💊", food:"🥦", supplement:"🌿" };
-    html += `<div class="section"><div class="section-title">確認した薬・食品・サプリメント</div><div class="badges">`;
-    data.normalized.forEach(d => {
-      html += `<div class="badge">
-        <div class="name">${catLabel[d.category]||""} ${d.generic_name_ja}</div>
-        <div class="sub">入力：${d.input}｜${d.drug_class}</div>
-      </div>`;
-    });
-    html += `</div></div>`;
-  }
-
-  // リスクサマリー
-  const riskColor = RISK_COLORS[data.risk_level] || "#336699";
-  const riskLabel = RISK_LABELS[data.risk_level] || "-";
-  html += `<div class="section"><div class="section-title">総合評価</div>
-  <div class="risk-box" style="border-color:${riskColor};">
-    <div class="risk-title" style="color:${riskColor};">● 総合リスク：${riskLabel}　（${data.interactions?.length||0}件の組み合わせを確認）</div>
-    <div class="risk-text">${data.summary||""}</div>
-  </div></div>`;
-
-  // 相互作用詳細
-  if (data.interactions?.length) {
-    const detailLabel = isPublic ? "なぜ問題になるか" : "メカニズム";
-    const effectLabel = isPublic ? "体への影響" : "臨床的影響";
-    const mgmtLabel   = isPublic ? "どうすればいい？" : "対処法・モニタリング";
-
-    html += `<div class="section"><div class="section-title">組み合わせの詳細</div>`;
-    data.interactions.forEach(item => {
-      const color = SEV_COLORS[item.severity] || "#333";
-      const label = SEV_LABELS[item.severity] || item.severity;
-      html += `<div class="interaction-box">
-        <div class="interaction-head">
-          <span class="int-names">${item.drug_a} <span class="int-sep">×</span> ${item.drug_b}</span>
-          <span class="sev-tag" style="color:${color};border-color:${color};">${label}</span>
-        </div>
-        <div class="interaction-body">
-          <span class="int-label">${detailLabel}</span><span class="int-value">${item.mechanism||""}</span>
-          <span class="int-label">${effectLabel}</span><span class="int-value">${item.effect||""}</span>
-          <span class="int-label">${mgmtLabel}</span><span class="int-value">${item.management||""}</span>
-          ${item.references ? `<span class="int-label">参考</span><span class="int-value">${item.references}</span>` : ""}
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-
-  // 推奨事項
-  if (data.recommendations?.length) {
-    html += `<div class="section"><div class="section-title">推奨事項</div>`;
-    data.recommendations.forEach(r => {
-      html += `<div class="list-item"><span class="list-arrow">→</span><span>${r}</span></div>`;
-    });
-    html += `</div>`;
-  }
-
-  // モニタリング
-  if (data.monitoring?.length) {
-    html += `<div class="section"><div class="section-title">${isPublic ? "日常生活で注意すること" : "モニタリング項目"}</div>`;
-    data.monitoring.forEach(m => {
-      html += `<div class="list-item"><span class="list-arrow">📋</span><span>${m}</span></div>`;
-    });
-    html += `</div>`;
-  }
-
-  return html;
-}
-
 // 初期化
 renderInputs();
 </script>
-<!-- PDF モーダル -->
-<div id="pdf-modal" style="
-  display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,0.4); z-index:200;
-  align-items:center; justify-content:center; padding:20px;
-">
-  <div style="
-    background:#fff; border-radius:20px;
-    padding:28px; width:100%; max-width:420px;
-    box-shadow:0 20px 60px rgba(0,0,0,0.2);
-  ">
-    <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px;">📄 PDFで保存</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:20px;font-weight:500;">以下の情報を入力してください（任意）</div>
-
-    <div style="margin-bottom:14px;">
-      <label style="font-size:12px;font-weight:700;color:var(--text2);display:block;margin-bottom:6px;">患者名・お名前</label>
-      <input id="pdf-patient-name" type="text" placeholder="例：山田 太郎" style="
-        width:100%; padding:10px 14px;
-        border:1.5px solid var(--border); border-radius:10px;
-        font-family:var(--font); font-size:14px; color:var(--text);
-        background:var(--bg); outline:none;
-      ">
-    </div>
-
-    <div style="margin-bottom:20px;">
-      <label style="font-size:12px;font-weight:700;color:var(--text2);display:block;margin-bottom:6px;">メモ・備考（任意）</label>
-      <textarea id="pdf-memo" placeholder="例：次回受診時に医師に確認する" rows="3" style="
-        width:100%; padding:10px 14px;
-        border:1.5px solid var(--border); border-radius:10px;
-        font-family:var(--font); font-size:13px; color:var(--text);
-        background:var(--bg); outline:none; resize:vertical;
-      "></textarea>
-    </div>
-
-    <div style="display:flex;gap:10px;">
-      <button onclick="closePdfModal()" style="
-        flex:1; padding:11px;
-        background:#fff; border:1.5px solid var(--border);
-        border-radius:12px; color:var(--muted);
-        font-family:var(--font); font-size:13px; font-weight:700;
-        cursor:pointer;
-      ">キャンセル</button>
-      <button onclick="generatePdf()" style="
-        flex:2; padding:11px;
-        background:linear-gradient(135deg,var(--teal),var(--teal2));
-        border:none; border-radius:12px; color:#fff;
-        font-family:var(--font); font-size:13px; font-weight:700;
-        cursor:pointer; box-shadow:0 4px 12px rgba(13,158,126,0.3);
-      ">📄 PDFを生成する</button>
-    </div>
-  </div>
-</div>
-
-</body></html>
+</body>
+</html>
