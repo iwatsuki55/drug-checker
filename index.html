@@ -2,605 +2,678 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-53N27QJX6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-53N27QJX6D');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>相互作用チェッカー | Drug Interaction Analyzer</title>
+
+<!-- SEO強化：タイトル・meta description最適化 -->
+<title>薬の飲み合わせチェック【無料】｜くすり飲み合わせナビ</title>
+<meta name="description" content="薬・食品・サプリの飲み合わせをAIが無料でチェック。ワーファリン×納豆、グレープフルーツ×降圧剤など。製品名のまま入力OK。登録不要・スマホ対応。">
+<meta name="keywords" content="薬 飲み合わせ,飲み合わせ チェック 無料,くすり 組み合わせ,薬 食べ合わせ,サプリ 薬 併用,ワーファリン 納豆,グレープフルーツ 薬,飲み合わせ AI">
+<link rel="canonical" href="https://iwatsuki55.github.io/drug-checker/">
+
+<!-- OGP強化 -->
+<meta property="og:title" content="薬の飲み合わせチェック【無料】｜くすり飲み合わせナビ">
+<meta property="og:description" content="薬・食品・サプリの飲み合わせをAIが無料チェック。製品名のまま入力OK。登録不要・スマホ対応。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://iwatsuki55.github.io/drug-checker/">
+<meta property="og:image" content="https://iwatsuki55.github.io/drug-checker/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="薬の飲み合わせチェック【無料】｜くすり飲み合わせナビ">
+<meta name="twitter:description" content="薬・食品・サプリの飲み合わせをAIが無料チェック。登録不要・スマホ対応。">
+
+<!-- 構造化データ：WebApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "くすり飲み合わせナビ",
+  "url": "https://iwatsuki55.github.io/drug-checker/",
+  "description": "薬・食品・サプリメントの飲み合わせをAIが無料でチェックするWebアプリ。製品名・一般名どちらでもOK。登録不要。",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
+  },
+  "inLanguage": "ja"
+}
+</script>
+
+<!-- 構造化データ：FAQ Schema（リッチリザルト対策） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "ワーファリンと納豆は一緒に食べてもいいですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ワーファリン（ワルファリン）と納豆の組み合わせは避けてください。納豆に含まれるビタミンKが、ワーファリンの血液を固まりにくくする効果を大きく弱めてしまいます。納豆だけでなく、クロレラ・青汁・ほうれん草なども大量摂取は控えましょう。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "グレープフルーツと一緒に飲んではいけない薬はありますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "カルシウム拮抗薬（アムロジピン・ニフェジピンなど）、スタチン系の一部（シンバスタチン・アトルバスタチン）、免疫抑制剤などはグレープフルーツとの飲み合わせに注意が必要です。グレープフルーツに含まれる成分が薬の分解を妨げ、血中濃度が上昇して副作用が出やすくなります。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "サプリメントと処方薬の飲み合わせを確認できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい、確認できます。イチョウ葉エキス・セントジョーンズワート・コエンザイムQ10・オメガ3など代表的なサプリメントと処方薬の飲み合わせをAIがチェックします。製品名・成分名どちらで入力してもOKです。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "薬の製品名（商品名）で入力できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい、製品名のままで入力できます。「バイアスピリン」「ワーファリン」「ノルバスク」「メトグルコ」などの商品名を入力すると、AIが自動的に一般名に変換して飲み合わせをチェックします。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "このサービスは無料で使えますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい、完全無料です。アカウント登録も不要で、すぐに利用できます。スマートフォン・PCどちらからでもご利用いただけます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "飲み合わせチェックの結果はどのくらい信頼できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "本サービスは日本の医薬品添付文書の情報をもとにAIが解析しますが、あくまでも参考情報です。個々の体質・病状・他の服薬状況によって判断は異なります。気になる点は必ず薬剤師や医師にご相談ください。"
+      }
+    }
+  ]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  /* ── リセット & ベース ── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #F0F4F8;
-    --surface: #FFFFFF;
-    --border: #D8E8E4;
-    --text: #1C2B2A;
-    --muted: #6B8E8A;
-    --dim: #9ABAB6;
-    --teal: #1D9E75;
-    --teal-light: #E1F5EE;
-    --blue: #185FA5;
-    --green: #3B6D11;
-    --red: #E24B4A;
-    --orange: #BA7517;
-    --yellow: #EF9F27;
-    --font: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-  }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal: #0d9e7e;
+  --teal2: #0bb896;
+  --teal-light: #e8f8f3;
+  --teal-mid: #c8ede3;
+  --sage: #52a98b;
+  --mint: #b8ede0;
+  --bg: #f7faf8;
+  --white: #ffffff;
+  --text: #1a3a30;
+  --text2: #3a6458;
+  --muted: #6a9e90;
+  --border: #d0e8de;
+  --shadow: 0 4px 24px rgba(13,158,126,0.10);
+  --shadow2: 0 8px 40px rgba(13,158,126,0.16);
+  --font: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden; }
 
-  /* ── ヘッダー ── */
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 14px 28px;
-    display: flex; align-items: center; gap: 14px;
-    background: #FFFFFF;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 1px 8px rgba(26,107,92,0.08);
-  }
-  .logo {
-    width: 34px; height: 34px;
-    background: #1D9E75;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; color: #fff;
-    flex-shrink: 0;
-  }
-  .header-title { font-size: 14px; font-weight: 600; }
-  .header-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 1px; }
-  .status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #1D9E75;
-    animation: pulse 2s infinite;
-  }
-  .status-label { font-size: 11px; color: #1D9E75; letter-spacing: 0.06em; }
-  .header-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(13,158,126,0.08);
+}
+.header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(13,158,126,0.3);
+}
+.logo-text { font-size: 15px; font-weight: 900; color: var(--text); line-height: 1.2; }
+.logo-text span { font-size: 11px; font-weight: 500; color: var(--muted); display: block; }
+.header-cta {
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  color: #fff; border: none; border-radius: 20px;
+  padding: 9px 18px; font-size: 13px; font-weight: 700;
+  font-family: var(--font); cursor: pointer; text-decoration: none;
+  box-shadow: 0 4px 12px rgba(13,158,126,0.3);
+  white-space: nowrap;
+}
 
-  /* ── メイン ── */
-  main { max-width: 740px; margin: 0 auto; padding: 36px 20px 60px; }
+.hero {
+  background: linear-gradient(160deg, #e8f8f3 0%, #f7faf8 50%, #fff8e8 100%);
+  padding: 48px 20px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(13,158,126,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(240,180,40,0.10) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--teal-light); color: var(--teal);
+  border: 1.5px solid var(--mint);
+  border-radius: 20px; padding: 5px 14px;
+  font-size: 12px; font-weight: 700;
+  margin-bottom: 20px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-title {
+  font-size: 28px; font-weight: 900; color: var(--text);
+  line-height: 1.4; margin-bottom: 16px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero-title em { color: var(--teal); font-style: normal; }
+.hero-subtitle {
+  font-size: 15px; color: var(--text2); line-height: 1.8;
+  margin-bottom: 32px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  color: #fff; text-decoration: none;
+  border-radius: 50px; padding: 16px 36px;
+  font-size: 16px; font-weight: 900;
+  font-family: var(--font);
+  box-shadow: 0 8px 28px rgba(13,158,126,0.4);
+  animation: fadeUp 0.6s 0.3s ease both;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(13,158,126,0.5); }
+.hero-note {
+  font-size: 12px; color: var(--muted); margin-top: 12px;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
 
-  /* ── カード ── */
-  .card {
-    background: #FFFFFF;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 22px 24px;
-    margin-bottom: 18px;
-    box-shadow: 0 1px 6px rgba(26,107,92,0.06);
-  }
-  .card-label {
-    font-size: 10px; color: var(--muted);
-    letter-spacing: 0.1em; text-transform: uppercase;
-    margin-bottom: 16px;
-  }
+.drug-examples {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  margin: 24px 0; padding: 0 10px;
+  animation: fadeUp 0.6s 0.35s ease both;
+}
+.drug-tag {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 6px 14px;
+  font-size: 13px; color: var(--text2); font-weight: 500;
+}
 
-  /* ── 入力行 ── */
-  .drug-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .drug-num { font-size: 11px; color: var(--dim); min-width: 24px; text-align: right; }
-  .drug-input {
-    flex: 1;
-    background: #FAFCFC;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    color: var(--text);
-    font-size: 13px;
-    font-family: var(--font);
-    outline: none;
-    transition: all 0.2s;
-  }
-  .drug-input:focus { border-color: #1D9E75; background: #E1F5EE; }
-  .drug-input::placeholder { color: var(--dim); }
-  .btn-remove {
-    width: 26px; height: 26px;
-    background: transparent; border: 1px solid var(--border);
-    border-radius: 6px; color: var(--muted);
-    cursor: pointer; font-size: 13px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; flex-shrink: 0;
-  }
-  .btn-remove:hover { border-color: rgba(255,68,68,0.4); color: #ff8888; }
-  .btn-remove:disabled { cursor: default; opacity: 0.3; }
+section { padding: 48px 20px; }
+.section-title {
+  font-size: 22px; font-weight: 900; color: var(--text);
+  text-align: center; margin-bottom: 8px;
+}
+.section-title em { color: var(--teal); font-style: normal; }
+.section-sub {
+  font-size: 14px; color: var(--muted); text-align: center;
+  margin-bottom: 32px; line-height: 1.7;
+}
 
-  .btn-add {
-    background: transparent;
-    border: 1px dashed #1D9E75;
-    border-radius: 8px; padding: 7px 14px;
-    color: #1D9E75; font-size: 12px;
-    font-family: var(--font); cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-add:hover { border-color: rgba(59,130,246,0.4); color: #7aa4c8; }
+.how-section { background: var(--white); }
+.steps { display: flex; flex-direction: column; gap: 20px; }
+.step {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: var(--bg); border-radius: 16px; padding: 20px;
+  border: 1px solid var(--border);
+}
+.step-num {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  color: #fff; font-size: 16px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(13,158,126,0.3);
+}
+.step-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.step-content p { font-size: 13px; color: var(--text2); line-height: 1.7; }
 
-  /* ── 実行ボタン ── */
-  .btn-run {
-    width: 100%; padding: 13px;
-    background: #1D9E75;
-    border: none; border-radius: 10px;
-    color: #fff; font-size: 14px; font-weight: 600;
-    font-family: var(--font); cursor: pointer;
-    letter-spacing: 0.06em; margin-bottom: 28px;
-    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
-    transition: all 0.2s;
-  }
-  .btn-run:hover { filter: brightness(1.08); }
-  .btn-run:disabled {
-    background: rgba(59,130,246,0.15);
-    color: var(--dim); cursor: default;
-    box-shadow: none;
-  }
+.usecase-section { background: var(--teal-light); }
+.usecases { display: flex; flex-direction: column; gap: 12px; }
+.usecase {
+  background: var(--white); border-radius: 14px; padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.usecase-icon { font-size: 28px; flex-shrink: 0; }
+.usecase-text h3 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.usecase-text p { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
-  /* ── エラー ── */
-  .error-box {
-    background: rgba(255,68,68,0.08);
-    border: 1px solid rgba(255,68,68,0.25);
-    border-radius: 10px; padding: 11px 15px;
-    font-size: 13px; color: #ff8888;
-    margin-bottom: 16px;
-  }
+.features-section { background: var(--white); }
+.features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.feature {
+  background: var(--bg); border-radius: 14px; padding: 18px 16px;
+  border: 1px solid var(--border); text-align: center;
+}
+.feature-icon { font-size: 32px; margin-bottom: 8px; }
+.feature h3 { font-size: 13px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+.feature p { font-size: 11px; color: var(--muted); line-height: 1.6; }
 
-  /* ── ローディング ── */
-  .loading-card { text-align: center; }
-  .spinner {
-    width: 36px; height: 36px;
-    border: 2px solid rgba(59,130,246,0.2);
-    border-top: 2px solid var(--blue);
-    border-radius: 50%;
-    margin: 0 auto 14px;
-    animation: spin 1s linear infinite;
-  }
-  .loading-step {
-    font-size: 13px; color: var(--muted); margin-bottom: 4px;
-  }
-  .loading-sub { font-size: 11px; color: var(--dim); }
+.examples-section { background: var(--bg); }
+.example-cards { display: flex; flex-direction: column; gap: 12px; }
+.example-card {
+  background: var(--white); border-radius: 14px; padding: 16px 18px;
+  border-left: 4px solid var(--teal);
+  box-shadow: var(--shadow);
+}
+.example-combo {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;
+}
+.example-drug {
+  background: var(--teal-light); color: var(--teal);
+  border-radius: 8px; padding: 3px 10px;
+  font-size: 13px; font-weight: 700;
+}
+.example-x { color: var(--muted); font-size: 12px; }
+.example-result { font-size: 12px; color: var(--text2); line-height: 1.7; }
+.example-badge {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  border-radius: 6px; padding: 2px 8px; margin-bottom: 6px;
+}
+.badge-danger { background: #fff0f0; color: #cc0000; border: 1px solid #ffcccc; }
+.badge-warn { background: #fff8e0; color: #cc8800; border: 1px solid #ffdd88; }
 
-  /* ── 正規化バッジ ── */
-  .normalized-list {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
-  }
-  .drug-badge {
-    background: rgba(59,130,246,0.1);
-    border: 1px solid rgba(59,130,246,0.25);
-    border-radius: 6px; padding: 5px 10px;
-    font-size: 11px;
-  }
-  .drug-badge .generic { color: #7aa4c8; }
-  .drug-badge .original { color: var(--dim); font-size: 10px; margin-top: 1px; }
-  .drug-badge .class { color: var(--dim); font-size: 10px; }
+/* FAQ セクション（新規追加） */
+.faq-section { background: var(--white); }
+.faq-list { display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  background: var(--bg); border-radius: 14px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.faq-q {
+  width: 100%; background: transparent; border: none;
+  padding: 16px 18px; cursor: pointer;
+  display: flex; align-items: flex-start; gap: 10px;
+  text-align: left; font-family: var(--font);
+  font-size: 14px; font-weight: 700; color: var(--text);
+  transition: background 0.15s;
+}
+.faq-q:hover { background: var(--teal-light); }
+.faq-q-icon { color: var(--teal); font-weight: 900; flex-shrink: 0; font-size: 15px; }
+.faq-q-text { flex: 1; line-height: 1.5; }
+.faq-arrow { color: var(--muted); font-size: 12px; flex-shrink: 0; margin-top: 2px; transition: transform 0.2s; }
+.faq-arrow.open { transform: rotate(180deg); }
+.faq-a {
+  display: none; padding: 0 18px 16px 42px;
+  font-size: 13px; color: var(--text2); line-height: 1.8;
+}
 
-  /* ── リスクサマリー ── */
-  .risk-card {
-    border-left: 3px solid;
-    border-radius: 12px;
-    padding: 18px 22px;
-    margin-bottom: 16px;
-  }
-  .risk-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-  .risk-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .risk-label { font-size: 11px; letter-spacing: 0.08em; }
-  .risk-count { font-size: 11px; color: var(--dim); margin-left: auto; }
-  .risk-summary { font-size: 12px; color: #7a9ac0; line-height: 1.8; }
+.notice-section { background: #fffbea; }
+.notice-box {
+  background: var(--white); border: 1.5px solid #f0d080;
+  border-radius: 14px; padding: 20px;
+  font-size: 13px; color: #7a6020; line-height: 1.8;
+}
+.notice-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #5a4010; }
+.notice-box ul { padding-left: 18px; }
+.notice-box li { margin-bottom: 6px; }
 
-  /* ── 相互作用アイテム ── */
-  .interaction-item {
-    border-radius: 12px; margin-bottom: 10px; overflow: hidden;
-  }
-  .interaction-header {
-    width: 100%; background: transparent; border: none;
-    padding: 14px 18px; cursor: pointer;
-    display: flex; align-items: center; gap: 10px;
-    text-align: left; color: var(--text);
-    font-family: var(--font); transition: all 0.15s;
-  }
-  .interaction-header:hover { filter: brightness(1.05); }
-  .interaction-icon { font-size: 14px; flex-shrink: 0; }
-  .interaction-title { flex: 1; }
-  .drug-names { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 3px; }
-  .drug-name { font-size: 13px; font-weight: 600; }
-  .drug-sep { font-size: 11px; color: var(--dim); }
-  .sev-badge {
-    font-size: 10px; border-radius: 4px;
-    padding: 1px 7px; border: 1px solid;
-  }
-  .onset-badge {
-    font-size: 10px; color: var(--dim);
-    border: 1px solid var(--border); border-radius: 4px;
-    padding: 1px 6px;
-  }
-  .evidence-label { font-size: 10px; color: var(--dim); margin-left: auto; }
-  .interaction-effect { font-size: 11px; color: var(--muted); }
-  .toggle-arrow { font-size: 11px; color: var(--dim); transition: transform 0.2s; flex-shrink: 0; }
-  .toggle-arrow.open { transform: rotate(180deg); }
+.cta-section {
+  background: linear-gradient(135deg, var(--teal), var(--sage));
+  padding: 56px 20px; text-align: center;
+}
+.cta-section h2 { font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 12px; line-height: 1.4; }
+.cta-section p { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 28px; line-height: 1.7; }
+.cta-btn {
+  display: inline-block;
+  background: #fff; color: var(--teal);
+  text-decoration: none; border-radius: 50px;
+  padding: 16px 36px; font-size: 16px; font-weight: 900;
+  font-family: var(--font);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+}
+.cta-btn:hover { transform: translateY(-2px); }
+.cta-note { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 12px; }
 
-  .interaction-detail { padding: 0 18px 18px; border-top: 1px solid; }
-  .detail-row { padding-top: 14px; }
-  .detail-label { font-size: 10px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 3px; }
-  .detail-value { font-size: 12px; line-height: 1.7; }
-  .detail-ref { font-size: 11px; color: var(--dim); margin-top: 4px; }
+footer {
+  background: var(--text); color: rgba(255,255,255,0.7);
+  padding: 32px 20px; text-align: center;
+}
+.footer-logo { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+.footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+.footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 12px; }
+.footer-links a:hover { color: var(--mint); }
+.footer-copy { font-size: 11px; color: rgba(255,255,255,0.4); }
 
-  /* ── no-interaction ── */
-  .no-interaction {
-    text-align: center; padding: 24px;
-    background: rgba(76,175,138,0.06);
-    border: 1px solid rgba(76,175,138,0.2);
-    border-radius: 12px;
-  }
-  .no-interaction .check { font-size: 22px; margin-bottom: 6px; }
-  .no-interaction .msg { font-size: 13px; color: var(--green); }
-  .no-interaction .sub { font-size: 11px; color: #1a4030; margin-top: 4px; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ── 推奨・モニタリング ── */
-  .list-item {
-    display: flex; gap: 10px; font-size: 12px;
-    color: #6a94bc; line-height: 1.7; padding: 3px 0;
-    border-bottom: 1px solid rgba(100,150,220,0.06);
-  }
-  .list-item:last-child { border-bottom: none; }
-  .list-arrow { color: #2a5a7a; flex-shrink: 0; }
-
-  /* ── 注意書き ── */
-  .disclaimer {
-    margin-top: 20px; padding: 12px 16px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(100,150,220,0.08);
-    border-radius: 10px;
-    font-size: 11px; color: var(--dim); line-height: 1.8;
-  }
-
-  /* ── アニメーション ── */
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
-  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-  .fade-up { animation: fadeUp 0.35s ease; }
+@media (max-width: 360px) {
+  .hero-title { font-size: 24px; }
+  .features { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <a href="../" style="text-decoration:none;display:flex;align-items:center;gap:12px;">
-    <div class="logo">Rx</div>
-    <div>
-      <div class="header-title" style="color:#1C2B2A;">相互作用チェッカー</div>
-      <div class="header-sub">くすり飲み合わせナビ</div>
+  <a href="#" class="header-logo">
+    <div class="logo-icon">💊</div>
+    <div class="logo-text">
+      くすり飲み合わせナビ
+      <span>薬・食品・サプリの組み合わせチェック</span>
     </div>
   </a>
-  <div class="header-right">
-    <div class="status-dot"></div>
-    <span class="status-label">AI POWERED</span>
-    <a href="../" style="margin-left:12px;font-size:12px;color:#1D9E75;text-decoration:none;
-      border:1px solid #1D9E75;padding:5px 12px;border-radius:20px;">
-      ← TOPへ戻る
-    </a>
-  </div>
+  <a href="./frontend/index.html" class="header-cta">無料でチェック</a>
 </header>
 
-<main>
-  <!-- 入力セクション -->
-  <div class="card" id="input-card">
-    <div class="card-label">01 / 薬剤入力（製品名・一般名 混在OK）</div>
-    <div id="drug-list"></div>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
-      <button class="btn-add" id="btn-add">+ 薬剤を追加</button>
-      <span style="font-size:11px;color:var(--dim);" id="drug-count">2/10</span>
+<section class="hero">
+  <div class="hero-badge">✨ 無料・登録不要・すぐ使える</div>
+  <h1 class="hero-title">
+    その薬と食べ物、<br>
+    <em>一緒に飲んで大丈夫？</em>
+  </h1>
+  <p class="hero-subtitle">
+    薬・食品・サプリメントの名前を入力するだけ。<br>
+    AIが添付文書をもとに、飲み合わせを<br>
+    わかりやすくチェックします。
+  </p>
+
+  <div class="drug-examples">
+    <span class="drug-tag">💊 ワーファリン</span>
+    <span class="drug-tag">🥦 納豆</span>
+    <span class="drug-tag">🍊 グレープフルーツ</span>
+    <span class="drug-tag">🌿 イチョウ葉</span>
+    <span class="drug-tag">💊 バイアスピリン</span>
+    <span class="drug-tag">🥛 牛乳</span>
+  </div>
+
+  <a href="./frontend/index.html" class="hero-btn">
+    💊 今すぐ無料でチェックする
+  </a>
+  <p class="hero-note">登録不要・完全無料・スマホ対応</p>
+</section>
+
+<section class="how-section">
+  <h2 class="section-title reveal">使い方は<em>3ステップ</em></h2>
+  <p class="section-sub reveal">むずかしい操作は一切ありません</p>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>薬・食品・サプリの名前を入力</h3>
+        <p>製品名でも一般名でもOK。「バイアスピリン」「グレープフルーツ」「イチョウ葉サプリ」など、思いつくまま入力してください。</p>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>「チェックする」ボタンを押す</h3>
+        <p>AIが添付文書の情報をもとに、組み合わせを自動で解析します。数秒で結果が表示されます。</p>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>結果を確認・PDFで保存</h3>
+        <p>わかりやすい言葉で結果を表示。気になることがあれば結果をPDFで保存して、薬剤師や医師に相談できます。</p>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- エラー -->
-  <div class="error-box" id="error-box" style="display:none;"></div>
-
-  <!-- 実行ボタン -->
-  <button class="btn-run" id="btn-run">▶ 相互作用を解析</button>
-
-  <!-- ローディング -->
-  <div class="card loading-card" id="loading-card" style="display:none;">
-    <div class="spinner"></div>
-    <div class="loading-step" id="loading-step">エージェント①：薬剤名を正規化中...</div>
-    <div class="loading-sub">製品名→一般名の変換・表記揺れを統一しています</div>
+<section class="usecase-section">
+  <h2 class="section-title reveal">こんな時に<em>使えます</em></h2>
+  <p class="section-sub reveal">日常のちょっとした疑問に</p>
+  <div class="usecases">
+    <div class="usecase reveal">
+      <div class="usecase-icon">👴</div>
+      <div class="usecase-text">
+        <h3>複数の薬を飲んでいる方</h3>
+        <p>病院から何種類も薬が出ていて、組み合わせが心配なとき</p>
+      </div>
+    </div>
+    <div class="usecase reveal">
+      <div class="usecase-icon">🥗</div>
+      <div class="usecase-text">
+        <h3>食べ合わせが気になる方</h3>
+        <p>「この薬を飲んでいるとき、グレープフルーツは食べられる？」</p>
+      </div>
+    </div>
+    <div class="usecase reveal">
+      <div class="usecase-icon">🌿</div>
+      <div class="usecase-text">
+        <h3>サプリを追加したい方</h3>
+        <p>今飲んでいる薬に、新しいサプリを足しても大丈夫か確認したいとき</p>
+      </div>
+    </div>
+    <div class="usecase reveal">
+      <div class="usecase-icon">👩‍⚕️</div>
+      <div class="usecase-text">
+        <h3>受診・薬局前に確認したい方</h3>
+        <p>医師や薬剤師に相談する前に、事前に情報を整理しておきたいとき</p>
+      </div>
+    </div>
   </div>
+</section>
 
-  <!-- 結果 -->
-  <div id="result-area" style="display:none;" class="fade-up"></div>
-</main>
+<section class="features-section">
+  <h2 class="section-title reveal">くすり飲み合わせナビの<em>特徴</em></h2>
+  <p class="section-sub reveal"></p>
+  <div class="features">
+    <div class="feature reveal">
+      <div class="feature-icon">📋</div>
+      <h3>添付文書に基づく</h3>
+      <p>推測ではなく、実際の添付文書の記載をもとに解析します</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">🗣️</div>
+      <h3>わかりやすい言葉</h3>
+      <p>医療の専門用語を使わず、日常の言葉で説明します</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">📄</div>
+      <h3>PDF保存できる</h3>
+      <p>結果をPDFで保存して、薬剤師・医師への相談に活用できます</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">🔒</div>
+      <h3>登録不要・無料</h3>
+      <p>アカウント登録なし。入力した情報は保存されません</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">💊</div>
+      <h3>製品名でOK</h3>
+      <p>「バイアスピリン」など製品名のまま入力できます</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">🥦</div>
+      <h3>食品・サプリも対応</h3>
+      <p>食べ物やサプリメントとの組み合わせも確認できます</p>
+    </div>
+  </div>
+</section>
+
+<section class="examples-section">
+  <h2 class="section-title reveal">こんな<em>組み合わせ</em>を確認できます</h2>
+  <p class="section-sub reveal">実際の添付文書に記載のある代表的な例</p>
+  <div class="example-cards">
+    <div class="example-card reveal">
+      <div class="example-combo">
+        <span class="example-drug">ワルファリン</span>
+        <span class="example-x">×</span>
+        <span class="example-drug">納豆</span>
+      </div>
+      <span class="example-badge badge-danger">⛔ 食べないようにしましょう</span>
+      <p class="example-result">納豆に含まれるビタミンKが、薬の効果を大きく弱めてしまいます。血液をサラサラにする薬が効かなくなる可能性があります。</p>
+    </div>
+    <div class="example-card reveal">
+      <div class="example-combo">
+        <span class="example-drug">カルシウム拮抗薬</span>
+        <span class="example-x">×</span>
+        <span class="example-drug">グレープフルーツ</span>
+      </div>
+      <span class="example-badge badge-warn">⚠️ 注意が必要です</span>
+      <p class="example-result">グレープフルーツが薬の分解を妨げ、薬が効きすぎてしまうことがあります。血圧が下がりすぎる可能性があります。</p>
+    </div>
+    <div class="example-card reveal">
+      <div class="example-combo">
+        <span class="example-drug">テトラサイクリン系抗生物質</span>
+        <span class="example-x">×</span>
+        <span class="example-drug">牛乳</span>
+      </div>
+      <span class="example-badge badge-warn">⚠️ 時間をずらしましょう</span>
+      <p class="example-result">牛乳に含まれるカルシウムが薬と結合して、薬が吸収されにくくなります。服用の前後2時間は牛乳を避けましょう。</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ セクション（新規追加・FAQ Schema対応） -->
+<section class="faq-section">
+  <h2 class="section-title reveal">よくある<em>質問</em></h2>
+  <p class="section-sub reveal">飲み合わせについて気になること</p>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(0)">
+        <span class="faq-q-icon">Q</span>
+        <span class="faq-q-text">ワーファリンと納豆は一緒に食べてもいいですか？</span>
+        <span class="faq-arrow" id="faq-arrow-0">▾</span>
+      </button>
+      <div class="faq-a" id="faq-a-0">
+        ワーファリン（ワルファリン）と納豆の組み合わせは避けてください。納豆に含まれるビタミンKが、ワーファリンの血液を固まりにくくする効果を大きく弱めてしまいます。納豆だけでなく、クロレラ・青汁・ほうれん草なども大量摂取は控えましょう。
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(1)">
+        <span class="faq-q-icon">Q</span>
+        <span class="faq-q-text">グレープフルーツと一緒に飲んではいけない薬はありますか？</span>
+        <span class="faq-arrow" id="faq-arrow-1">▾</span>
+      </button>
+      <div class="faq-a" id="faq-a-1">
+        カルシウム拮抗薬（アムロジピン・ニフェジピンなど）、スタチン系の一部（シンバスタチン・アトルバスタチン）、免疫抑制剤などはグレープフルーツとの飲み合わせに注意が必要です。グレープフルーツに含まれる成分が薬の分解を妨げ、血中濃度が上昇して副作用が出やすくなります。
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(2)">
+        <span class="faq-q-icon">Q</span>
+        <span class="faq-q-text">サプリメントと処方薬の飲み合わせを確認できますか？</span>
+        <span class="faq-arrow" id="faq-arrow-2">▾</span>
+      </button>
+      <div class="faq-a" id="faq-a-2">
+        はい、確認できます。イチョウ葉エキス・セントジョーンズワート・コエンザイムQ10・オメガ3など代表的なサプリメントと処方薬の飲み合わせをAIがチェックします。製品名・成分名どちらで入力してもOKです。
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(3)">
+        <span class="faq-q-icon">Q</span>
+        <span class="faq-q-text">薬の製品名（商品名）で入力できますか？</span>
+        <span class="faq-arrow" id="faq-arrow-3">▾</span>
+      </button>
+      <div class="faq-a" id="faq-a-3">
+        はい、製品名のままで入力できます。「バイアスピリン」「ワーファリン」「ノルバスク」「メトグルコ」などの商品名を入力すると、AIが自動的に一般名に変換して飲み合わせをチェックします。
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(4)">
+        <span class="faq-q-icon">Q</span>
+        <span class="faq-q-text">このサービスは無料で使えますか？</span>
+        <span class="faq-arrow" id="faq-arrow-4">▾</span>
+      </button>
+      <div class="faq-a" id="faq-a-4">
+        はい、完全無料です。アカウント登録も不要で、すぐに利用できます。スマートフォン・PCどちらからでもご利用いただけます。
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(5)">
+        <span class="faq-q-icon">Q</span>
+        <span class="faq-q-text">飲み合わせチェックの結果はどのくらい信頼できますか？</span>
+        <span class="faq-arrow" id="faq-arrow-5">▾</span>
+      </button>
+      <div class="faq-a" id="faq-a-5">
+        本サービスは日本の医薬品添付文書の情報をもとにAIが解析しますが、あくまでも参考情報です。個々の体質・病状・他の服薬状況によって判断は異なります。気になる点は必ず薬剤師や医師にご相談ください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="notice-section">
+  <div class="notice-box reveal">
+    <h3>⚠️ ご利用にあたって</h3>
+    <ul>
+      <li>本サービスはAIによる<strong>参考情報の提供</strong>を目的としています</li>
+      <li>医師・薬剤師による診断・処方の代替ではありません</li>
+      <li>気になる点は必ず<strong>薬剤師や医師にご相談</strong>ください</li>
+      <li>添付文書の記載に基づいていますが、個々の体質・病状により異なる場合があります</li>
+    </ul>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2 class="reveal">まずは無料で<br>試してみてください</h2>
+  <p class="reveal">登録不要・完全無料<br>スマホからすぐ使えます</p>
+  <a href="./frontend/index.html" class="cta-btn reveal">
+    💊 飲み合わせをチェックする
+  </a>
+  <p class="cta-note reveal">※ AIによる参考情報です。最終判断は薬剤師・医師にご相談ください</p>
+</section>
+
+<footer>
+  <div class="footer-logo">💊 くすり飲み合わせナビ</div>
+  <div class="footer-links">
+    <a href="./terms.html">利用規約</a>
+    <a href="./privacy.html">プライバシーポリシー</a>
+    <a href="./disclaimer.html">免責事項</a>
+    <a href="./frontend/index.html">チェックツール</a>
+  </div>
+  <p class="footer-copy">© 2026 くすり飲み合わせナビ. All rights reserved.</p>
+</footer>
 
 <script>
-// ── 設定 ──
-const API_BASE = "https://drug-checker-api.onrender.com";
-// const API_BASE = "https://your-app.onrender.com"; // デプロイ時はここを変更
-
-// ── 重篤度設定 ──
-const SEV = {
-  contraindicated: { label:"禁忌",   color:"#ff4444", bg:"rgba(255,68,68,0.1)",   border:"rgba(255,68,68,0.3)",   icon:"⛔" },
-  major:           { label:"重大",   color:"#ff8c00", bg:"rgba(255,140,0,0.1)",   border:"rgba(255,140,0,0.3)",   icon:"⚠️" },
-  moderate:        { label:"中程度", color:"#f0b429", bg:"rgba(240,180,41,0.1)",  border:"rgba(240,180,41,0.3)",  icon:"⚡" },
-  minor:           { label:"軽微",   color:"#4caf8a", bg:"rgba(76,175,138,0.1)", border:"rgba(76,175,138,0.3)", icon:"ℹ️" },
-};
-const RISK = {
-  high:     { label:"高リスク", color:"#ff4444" },
-  moderate: { label:"要注意",   color:"#f0b429" },
-  low:      { label:"低リスク", color:"#4caf8a" },
-  none:     { label:"問題なし", color:"#7aa4c8" },
-};
-const ONSET_LABEL = { immediate:"即時", delayed:"遅延", unknown:"不明" };
-
-// ── 状態 ──
-let drugs = ["", ""];
-let expandedIdx = null;
-
-// ── DOM ──
-const drugListEl  = document.getElementById("drug-list");
-const drugCountEl = document.getElementById("drug-count");
-const btnAdd      = document.getElementById("btn-add");
-const btnRun      = document.getElementById("btn-run");
-const errorBox    = document.getElementById("error-box");
-const loadingCard = document.getElementById("loading-card");
-const loadingStep = document.getElementById("loading-step");
-const resultArea  = document.getElementById("result-area");
-
-function renderInputs() {
-  drugListEl.innerHTML = "";
-  drugs.forEach((d, i) => {
-    const row = document.createElement("div");
-    row.className = "drug-row";
-    row.innerHTML = `
-      <span class="drug-num">${String(i+1).padStart(2,"0")}</span>
-      <input class="drug-input" type="text" value="${d}"
-        placeholder="薬剤名 ${i+1}（例：バイアスピリン、ワーファリン）"
-        data-idx="${i}" />
-      <button class="btn-remove" data-idx="${i}" ${drugs.length<=2?"disabled":""}>×</button>
-    `;
-    drugListEl.appendChild(row);
+// スクロールアニメーション
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
   });
-  drugCountEl.textContent = `${drugs.length}/10`;
-  btnAdd.disabled = drugs.length >= 10;
-  updateRunBtn();
-}
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-function updateRunBtn() {
-  const valid = drugs.filter(d => d.trim()).length;
-  btnRun.disabled = valid < 2;
-  btnRun.textContent = `▶ ${valid}剤の相互作用を解析`;
-}
-
-// イベント委譲
-drugListEl.addEventListener("input", e => {
-  if (e.target.matches(".drug-input")) {
-    drugs[+e.target.dataset.idx] = e.target.value;
-    updateRunBtn();
-  }
-});
-drugListEl.addEventListener("click", e => {
-  if (e.target.matches(".btn-remove") && !e.target.disabled) {
-    drugs.splice(+e.target.dataset.idx, 1);
-    renderInputs();
-  }
-});
-drugListEl.addEventListener("keydown", e => {
-  if (e.target.matches(".drug-input") && e.key === "Enter") {
-    const idx = +e.target.dataset.idx;
-    if (idx === drugs.length - 1 && drugs.length < 10) {
-      drugs.push("");
-      renderInputs();
-      setTimeout(() => drugListEl.querySelectorAll(".drug-input")[idx+1]?.focus(), 50);
-    }
-  }
-});
-btnAdd.addEventListener("click", () => {
-  if (drugs.length < 10) { drugs.push(""); renderInputs(); }
-});
-
-// ── 解析実行 ──
-btnRun.addEventListener("click", async () => {
-  const valid = drugs.map(d => d.trim()).filter(Boolean);
-  if (valid.length < 2) { showError("2剤以上入力してください"); return; }
-
-  hideError();
-  resultArea.style.display = "none";
-  loadingCard.style.display = "block";
-  loadingStep.textContent = "エージェント①：薬剤名を正規化中...";
-  btnRun.disabled = true;
-  expandedIdx = null;
-
-  // Step1完了後のUI更新（タイミングのみ）
-  setTimeout(() => {
-    loadingStep.textContent = "エージェント②：相互作用を解析中...";
-  }, 3000);
-
-  try {
-    const res = await fetch(`${API_BASE}/api/check`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ drugs: valid })
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "サーバーエラー");
-
-    loadingCard.style.display = "none";
-    renderResult(data);
-  } catch(e) {
-    loadingCard.style.display = "none";
-    showError("エラー: " + e.message + "\n（バックエンドが起動しているか確認してください）");
-  } finally {
-    btnRun.disabled = false;
-    updateRunBtn();
-  }
-});
-
-// ── 結果描画 ──
-function renderResult(data) {
-  const risk = RISK[data.risk_level] || RISK.none;
-  let html = "";
-
-  // ── 正規化結果 ──
-  if (data.normalized?.length) {
-    html += `<div class="card"><div class="card-label">Step 1 / 正規化結果</div>
-    <div class="normalized-list">`;
-    data.normalized.forEach(d => {
-      html += `<div class="drug-badge">
-        <div class="generic">${d.generic_name_ja}（${d.generic_name_en}）</div>
-        <div class="original">入力：${d.input}</div>
-        <div class="class">${d.drug_class}</div>
-      </div>`;
-    });
-    html += "</div>";
-    if (data.unrecognized?.length) {
-      html += `<div style="font-size:11px;color:#ff8888;">認識できなかった薬剤：${data.unrecognized.join("、")}</div>`;
-    }
-    html += "</div>";
-  }
-
-  // ── リスクサマリー ──
-  html += `<div class="risk-card card" style="border-left-color:${risk.color};border-color:${risk.color}30;background:${risk.color}08;">
-    <div class="risk-header">
-      <div class="risk-dot" style="background:${risk.color};box-shadow:0 0 8px ${risk.color};"></div>
-      <span class="risk-label" style="color:${risk.color};">総合リスク：${risk.label}</span>
-      <span class="risk-count">${data.interactions?.length||0}件の相互作用を検出</span>
-    </div>
-    <div class="risk-summary">${data.summary||""}</div>
-  </div>`;
-
-  // ── 推奨事項 ──
-  if (data.recommendations?.length) {
-    html += `<div class="card"><div class="card-label">推奨事項</div>`;
-    data.recommendations.forEach(r => {
-      html += `<div class="list-item"><span class="list-arrow">→</span><span>${r}</span></div>`;
-    });
-    html += "</div>";
-  }
-
-  // ── モニタリング ──
-  if (data.monitoring?.length) {
-    html += `<div class="card"><div class="card-label">モニタリング項目</div>`;
-    data.monitoring.forEach(m => {
-      html += `<div class="list-item"><span class="list-arrow">📊</span><span>${m}</span></div>`;
-    });
-    html += "</div>";
-  }
-
-  // ── 相互作用リスト ──
-  if (data.interactions?.length) {
-    html += `<div class="card-label" style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">Step 2 / 相互作用詳細</div>`;
-    data.interactions.forEach((item, i) => {
-      const cfg = SEV[item.severity] || SEV.minor;
-      const onsetLabel = ONSET_LABEL[item.onset] || "";
-      html += `
-      <div class="interaction-item" style="background:${cfg.bg};border:1px solid ${cfg.border};" id="item-${i}">
-        <button class="interaction-header" onclick="toggleItem(${i})">
-          <span class="interaction-icon">${cfg.icon}</span>
-          <div class="interaction-title">
-            <div class="drug-names">
-              <span class="drug-name">${item.drug_a}</span>
-              <span class="drug-sep">×</span>
-              <span class="drug-name">${item.drug_b}</span>
-              <span class="sev-badge" style="color:${cfg.color};border-color:${cfg.color}40;background:${cfg.color}15;">${cfg.label}</span>
-              ${onsetLabel?`<span class="onset-badge">${onsetLabel}</span>`:""}
-              ${item.evidence?`<span class="evidence-label">エビデンス：${item.evidence}</span>`:""}
-            </div>
-            <div class="interaction-effect">${item.effect||""}</div>
-          </div>
-          <span class="toggle-arrow" id="arrow-${i}">▾</span>
-        </button>
-        <div class="interaction-detail" id="detail-${i}" style="display:none;border-top-color:${cfg.border};">
-          <div class="detail-row">
-            <div class="detail-label">メカニズム</div>
-            <div class="detail-value" style="color:#7a9ac0;">${item.mechanism||""}</div>
-          </div>
-          <div class="detail-row">
-            <div class="detail-label">臨床的影響</div>
-            <div class="detail-value" style="color:#7a9ac0;">${item.effect||""}</div>
-          </div>
-          <div class="detail-row">
-            <div class="detail-label">対処法・モニタリング</div>
-            <div class="detail-value" style="color:${cfg.color};">${item.management||""}</div>
-          </div>
-          ${item.references?`<div class="detail-ref">参考：${item.references}</div>`:""}
-        </div>
-      </div>`;
-    });
-  } else {
-    html += `<div class="no-interaction">
-      <div class="check">✓</div>
-      <div class="msg">顕著な相互作用は検出されませんでした</div>
-      <div class="sub">引き続き添付文書および専門家の判断による確認を推奨します</div>
-    </div>`;
-  }
-
-  html += `<div class="disclaimer">⚠️ 本ツールはAIによる参考情報の提供を目的としています。最終的な処方判断・服薬指導は必ず薬剤師・医師が行ってください。添付文書・インタビューフォームを必ず参照し、個々の患者状態を考慮した判断を行ってください。</div>`;
-
-  // ── 広告①：高・中リスク → 血圧計 ──
-  if (data.risk_level === "high" || data.risk_level === "moderate") {
-    html += adBlock("🩺 血圧のモニタリングに", [
-      { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00scsq4.2bo113c4.g00scsq4.2bo12481%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flife-rhythm%252Fhcr-750at%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flife-rhythm%252Fi%252F10000473%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/life-rhythm/cabinet/item01/11845472/hcr-750at_v2.jpg?_ex=64x64", name:"オムロン 上腕式血圧計（スマホ連動）", price:"12,800円〜" },
-      { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00s8b04.2bo11aa6.g00s8b04.2bo12f59%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fgbft-ltd%252Fjc-z5g6-0pya%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fgbft-ltd%252Fi%252F10035296%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/gbft-ltd/cabinet/image52/jc-z5g6-0pya_deco.jpg?_ex=64x64", name:"テルモ アームイン血圧計", price:"11,390円" },
-    ]);
-  }
-
-  // ── 広告②：薬ケース（常時表示） ──
-  html += adBlock("💊 お薬の管理・飲み忘れ防止に", [
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qlaf4.2bo11620.g00qlaf4.2bo129f8%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkirara-pla%252F10001220%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkirara-pla%252Fi%252F10001220%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/kirara-pla/cabinet/syuunou/kusuri/imgrc0107433596.jpg?_ex=64x64", name:"週間くすりケース（シール付き・介護対応）", price:"4,000円" },
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q7284.2bo1132b.g00q7284.2bo127b9%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flivingut%252F4973228170250%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flivingut%252Fi%252F10063368%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/livingut/cabinet/maker_shinko_hg/4973228170250.jpg?_ex=64x64", name:"くすり整理ボックス（1日3回分・飲み忘れ防止）", price:"2,130円" },
-  ]);
-
-  // ── 広告③：サプリ（常時表示） ──
-  html += adBlock("🌿 健康維持・サプリメント", [
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00pzam4.2bo1136a.g00pzam4.2bo12096%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Foga%252F1518476%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Foga%252Fi%252F10127578%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/oga/cabinet/item_img/shohin/250115_lk_3_12.jpg?_ex=64x64", name:"オメガ3サプリ 約12ヶ月分（DHA・EPA）楽天1位", price:"3,900円" },
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tcof4.2bo11e24.g00tcof4.2bo12e4d%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fduen1102%252F70000014%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fduen1102%252Fi%252F10000135%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/duen1102/cabinet/08563445/11219142/imgrc0144742038.jpg?_ex=64x64", name:"マルチビタミン 90日分（国内製造）", price:"1,000円" },
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tcof4.2bo11e24.g00tcof4.2bo12e4d%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fduen1102%252F90000001-03%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fduen1102%252Fi%252F10000060%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/duen1102/cabinet/08563445/08862152/imgrc0131124536.jpg?_ex=64x64", name:"シボヘルシ 90日分（機能性表示食品・内臓脂肪サポート）", price:"3,980円" },
-  ]);
-
-  // A8計測タグ
-  html += `<img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=4B1BLJ+4784FM+2HOM+BWGDT" alt="">
-  <img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=4B1BLJ+4784FM+2HOM+BWGDT" alt="">`;
-
-  resultArea.innerHTML = html;
-  resultArea.style.display = "block";
-  resultArea.className = "fade-up";
-  resultArea.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-// ── 広告ブロック生成ヘルパー ──
-function adBlock(title, items) {
-  const isDark = true; // frontend版はダークテーマ
-  let h = `<div style="margin:20px 0;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(100,150,220,0.14);border-radius:12px;">
-    <div style="font-size:10px;color:#4a6a8a;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">PR / おすすめ商品</div>
-    <div style="font-size:13px;font-weight:600;color:#dde6f0;margin-bottom:12px;">${title}</div>`;
-  items.forEach((item, i) => {
-    const isLast = i === items.length - 1;
-    h += `<a href="${item.href}" target="_blank" rel="noopener sponsored"
-      style="display:flex;gap:10px;align-items:center;text-decoration:none;
-        padding:10px 12px;border-radius:8px;
-        background:rgba(255,255,255,0.04);border:1px solid rgba(100,150,220,0.1);
-        ${isLast ? "" : "margin-bottom:8px;"}
-        transition:background .15s;">
-      <img src="${item.img}" alt="${item.name}" width="52" height="52"
-        style="border-radius:6px;object-fit:cover;flex-shrink:0;">
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:12px;font-weight:600;color:#dde6f0;line-height:1.4;margin-bottom:3px;">${item.name}</div>
-        <div style="font-size:11px;color:#4a6a8a;">${item.price}</div>
-      </div>
-      <div style="font-size:11px;color:#3b82f6;flex-shrink:0;">楽天 ›</div>
-    </a>`;
-  });
-  h += `</div>`;
-  return h;
-}
-
-function toggleItem(i) {
-  const detail = document.getElementById(`detail-${i}`);
-  const arrow  = document.getElementById(`arrow-${i}`);
-  const isOpen = expandedIdx === i;
+// FAQ アコーディオン
+function toggleFaq(i) {
+  const a = document.getElementById('faq-a-' + i);
+  const arrow = document.getElementById('faq-arrow-' + i);
+  const isOpen = a.style.display === 'block';
   // 全部閉じる
-  document.querySelectorAll("[id^='detail-']").forEach(el => el.style.display = "none");
-  document.querySelectorAll("[id^='arrow-']").forEach(el => el.classList.remove("open"));
-  expandedIdx = null;
+  document.querySelectorAll('[id^="faq-a-"]').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('[id^="faq-arrow-"]').forEach(el => el.classList.remove('open'));
   if (!isOpen) {
-    detail.style.display = "block";
-    arrow.classList.add("open");
-    expandedIdx = i;
+    a.style.display = 'block';
+    arrow.classList.add('open');
   }
 }
-
-function showError(msg) { errorBox.textContent = msg; errorBox.style.display = "block"; }
-function hideError()    { errorBox.style.display = "none"; }
-
-// 初期化
-renderInputs();
 </script>
 </body>
 </html>
