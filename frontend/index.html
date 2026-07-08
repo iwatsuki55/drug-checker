@@ -528,12 +528,6 @@ function renderResult(data) {
     html += "</div>";
   }
 
-  // ── 広告②：薬ケース（常時表示） ──
-  html += adBlock("💊 お薬の管理・飲み忘れ防止に", [
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qlaf4.2bo11620.g00qlaf4.2bo129f8%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkirara-pla%252F10001220%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkirara-pla%252Fi%252F10001220%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/kirara-pla/cabinet/syuunou/kusuri/imgrc0107433596.jpg?_ex=64x64", name:"週間くすりケース（シール付き・介護対応）", price:"4,000円" },
-    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q7284.2bo1132b.g00q7284.2bo127b9%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flivingut%252F4973228170250%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flivingut%252Fi%252F10063368%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/livingut/cabinet/maker_shinko_hg/4973228170250.jpg?_ex=64x64", name:"くすり整理ボックス（1日3回分・飲み忘れ防止）", price:"2,130円" },
-  ]);
-
   // ── 相互作用リスト ──
   if (data.interactions?.length) {
     html += `<div class="card-label" style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">Step 2 / 相互作用詳細</div>`;
@@ -596,6 +590,12 @@ function renderResult(data) {
     display:flex; align-items:center; justify-content:center; gap:8px;
   ">📄 この結果をPDFで保存する</button>`;
 
+  // ── 広告②：薬ケース（常時表示） ──
+  html += adBlock("💊 お薬の管理・飲み忘れ防止に", [
+    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qlaf4.2bo11620.g00qlaf4.2bo129f8%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkirara-pla%252F10001220%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkirara-pla%252Fi%252F10001220%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/kirara-pla/cabinet/syuunou/kusuri/imgrc0107433596.jpg?_ex=64x64", name:"週間くすりケース（シール付き・介護対応）", price:"4,000円" },
+    { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q7284.2bo1132b.g00q7284.2bo127b9%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flivingut%252F4973228170250%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flivingut%252Fi%252F10063368%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/livingut/cabinet/maker_shinko_hg/4973228170250.jpg?_ex=64x64", name:"くすり整理ボックス（1日3回分・飲み忘れ防止）", price:"2,130円" },
+  ]);
+
   // ── 広告③：サプリ（常時表示） ──
   html += adBlock("🌿 健康維持・サプリメント", [
     { href:"https://rpx.a8.net/svt/ejp?a8mat=4B1BLJ+4784FM+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00pzam4.2bo1136a.g00pzam4.2bo12096%2Fa26040297369_4B1BLJ_4784FM_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Foga%252F1518476%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Foga%252Fi%252F10127578%252F%26rafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7", img:"https://thumbnail.image.rakuten.co.jp/@0_mall/oga/cabinet/item_img/shohin/250115_lk_3_12.jpg?_ex=64x64", name:"オメガ3サプリ 約12ヶ月分（DHA・EPA）楽天1位", price:"3,900円" },
@@ -612,24 +612,33 @@ function renderResult(data) {
   resultArea.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-// ── 広告ブロック生成ヘルパー ──
+// ── 広告ブロック生成ヘルパー（改善版）──
 function adBlock(title, items) {
-  let html = `<div style="margin-top:16px;margin-bottom:16px;padding:16px 18px;background:#f7faf8;border:1px solid var(--border);border-radius:14px;">
-    <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:0.06em;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
-      <span style="width:3px;height:11px;background:var(--teal);border-radius:2px;display:inline-block;"></span>
+  let html = `<div style="margin:20px 0;padding:18px;background:#f7faf8;border:1px solid #d0e8e0;border-radius:14px;">
+    <div style="font-size:10px;color:#888;font-weight:700;letter-spacing:0.1em;margin-bottom:14px;display:flex;align-items:center;gap:6px;text-transform:uppercase;">
+      <span style="width:3px;height:10px;background:#1D9E75;border-radius:2px;display:inline-block;flex-shrink:0;"></span>
       ${title}
-      <span style="margin-left:auto;font-size:10px;color:var(--dim);font-weight:400;">※広告</span>
+      <span style="margin-left:auto;font-size:9px;color:#aaa;font-weight:400;letter-spacing:0;">PR / 広告</span>
     </div>`;
   items.forEach((item, i) => {
     const isLast = i === items.length - 1;
-    html += `<div style="background:#fff;border:1px solid var(--border2);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:center;${isLast ? "" : "margin-bottom:8px;"}">
-      <a href="${item.href}" rel="nofollow" style="flex-shrink:0;">
-        <img style="width:52px;height:52px;object-fit:contain;border-radius:6px;" src="${item.img}" alt="${item.name}">
-      </a>
-      <div style="flex:1;min-width:0;">
-        <a href="${item.href}" rel="nofollow" style="font-size:12px;font-weight:700;color:var(--text);text-decoration:none;display:block;line-height:1.45;margin-bottom:3px;">${item.name}</a>
-        <div style="font-size:13px;color:#c00;font-weight:700;">${item.price}</div>
+    html += `
+    <div style="background:#fff;border:1px solid #e0ede9;border-radius:12px;padding:12px;${isLast ? "" : "margin-bottom:10px;"}">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;">
+        <img style="width:72px;height:72px;object-fit:contain;border-radius:8px;flex-shrink:0;border:1px solid #f0f0f0;"
+          src="${item.img}" alt="${item.name}">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:#1C2B2A;line-height:1.5;margin-bottom:4px;">${item.name}</div>
+          <div style="font-size:15px;color:#cc0000;font-weight:700;">${item.price}</div>
+        </div>
       </div>
+      <a href="${item.href}" target="_blank" rel="nofollow noopener sponsored"
+        style="display:block;width:100%;box-sizing:border-box;text-align:center;
+          background:#FF6600;color:#fff;text-decoration:none;
+          font-size:14px;font-weight:700;padding:11px 0;border-radius:8px;
+          letter-spacing:0.02em;">
+        🛒 楽天市場で見る
+      </a>
     </div>`;
   });
   html += `</div>`;
