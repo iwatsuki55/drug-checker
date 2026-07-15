@@ -473,6 +473,53 @@ app.post("/api/check", async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────
+// OCR：お薬説明書・薬剤情報提供書から薬剤名抽出
+// ─────────────────────────────────────────
+app.post("/api/ocr", async (req, res) => {
+  const { imageBase64, mimeType } = req.body;
+  if (!imageBase64 || !mimeType) {
+    return res.status(400).json({ error: "imageBase64 と mimeType が必要です" });
+  }
+  try {
+    const ocrRes = await client.messages.create({
+      model: "claude-haiku-4-5",
+      max_tokens: 512,
+      messages: [{
+        role: "user",
+        content: [
+          {
+            type: "image",
+            source: { type: "base64", media_type: mimeType, data: imageBase64 }
+          },
+          {
+            type: "text",
+            text: `この画像はお薬説明書または薬剤情報提供書です。
+記載されている薬剤名（医薬品名）のみを抽出してください。
+
+ルール：
+- 一般名・先発品名・後発品名どちらでも可
+- 規格（mg等）は除いて薬剤名だけ
+- 食品・サプリメントが含まれていれば含める
+- JSONのみ返す。説明文・マークダウン不要
+
+出力形式：
+{"drugs": ["薬剤名1", "薬剤名2", "薬剤名3"]}`
+          }
+        ]
+      }]
+    });
+
+    const raw = (ocrRes.content?.[0]?.text || "").replace(/\`\`\`json|\`\`\`/g, "").trim();
+    const result = JSON.parse(raw);
+    res.json({ drugs: result.drugs || [] });
+
+  } catch (err) {
+    console.error("[OCR Error]", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ヘルスチェック
 app.get("/api/health", (_, res) => res.json({ status: "ok" }));
 
