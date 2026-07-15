@@ -3,7 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>相互作用チェッカー | Drug Interaction Analyzer</title>
+<title>薬の飲み合わせチェック【写真読み取りOK】| くすり飲み合わせナビ</title>
+<meta name="description" content="お薬説明書の写真を撮るだけで薬の飲み合わせ・相互作用をAIがチェック。トランサミン・メジコンなど薬剤名の手入力も可。医療従事者向け専門モードあり。登録不要・完全無料。">
+<meta name="keywords" content="薬 飲み合わせ チェック,相互作用,お薬説明書 読み取り,薬剤情報提供書,AI,無料,医薬品 組み合わせ">
+<meta property="og:title" content="薬の飲み合わせチェック【写真読み取りOK】| くすり飲み合わせナビ">
+<meta property="og:description" content="お薬説明書の写真を撮るだけ。AIが薬剤名を自動読み取りして飲み合わせをチェックします。完全無料・登録不要。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://iwatsuki55.github.io/drug-checker/frontend/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://iwatsuki55.github.io/drug-checker/frontend/index.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "くすり飲み合わせナビ 相互作用チェッカー",
+  "description": "薬剤情報提供書の写真から薬剤名を自動読み取りし、飲み合わせ・相互作用をAIでチェック。医療従事者向け専門モードと一般向けわかりやすいモードを切り替え可能。",
+  "url": "https://iwatsuki55.github.io/drug-checker/frontend/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "featureList": [
+    "お薬説明書・薬剤情報提供書のカメラ読み取り",
+    "薬剤名・食品・サプリメントの飲み合わせチェック",
+    "医療従事者向け専門モード",
+    "一般向けわかりやすいモード",
+    "完全無料・登録不要"
+  ]
+}
+</script>
 <style>
   /* ── リセット & ベース ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -279,6 +306,26 @@
     <button id="btn-mode-public" onclick="setMode('public')" style="flex:1;padding:11px;border-radius:12px;border:2px solid var(--border);background:#fff;color:var(--muted);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;">
       🙋 一般の方向け
     </button>
+  </div>
+
+  <!-- カメラ読み取りボタン -->
+  <div style="margin-bottom:10px;">
+    <button onclick="document.getElementById('ocr-file').click()"
+      style="width:100%;padding:14px;border-radius:14px;
+        border:2px dashed #1D9E75;background:#f0fdf8;
+        color:#1D9E75;font-family:var(--font);font-size:14px;
+        font-weight:700;cursor:pointer;display:flex;align-items:center;
+        justify-content:center;gap:10px;transition:background 0.2s;">
+      <span style="font-size:20px;">📷</span>
+      <span>お薬説明書・薬剤情報提供書から読み取る</span>
+    </button>
+    <input type="file" id="ocr-file" accept="image/*" capture="environment"
+      style="display:none;" onchange="runOcrFromFile(this)">
+    <div id="ocr-status" style="display:none;margin-top:8px;text-align:center;
+      font-size:12px;color:#1D9E75;font-weight:600;"></div>
+    <div style="text-align:center;font-size:11px;color:#9ABAB6;margin-top:6px;">
+      撮影した画像からAIが薬剤名を自動入力 ／ もちろん手入力もOK
+    </div>
   </div>
 
   <!-- 入力セクション -->
@@ -864,6 +911,94 @@ function buildPdfBody(data, modeLabel) {
   }
 
   return html;
+}
+
+
+// ── お薬説明書 OCR読み取り ──
+async function runOcrFromFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const status = document.getElementById('ocr-status');
+  status.style.display = 'block';
+  status.textContent = '📷 画像を読み取り中...';
+
+  try {
+    // 画像をbase64に変換
+    const b64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result.split(',')[1]);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    });
+    const mimeType = file.type || 'image/jpeg';
+
+    // Claude Vision APIで薬剤名を抽出
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 512,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: mimeType, data: b64 }
+            },
+            {
+              type: 'text',
+              text: `この画像はお薬説明書または薬剤情報提供書です。
+記載されている薬剤名（医薬品名）のみを抽出してください。
+
+ルール：
+- 一般名・先発品名・後発品名どちらでも可
+- 規格（mg等）は除いて薬剤名だけ
+- 食品・サプリメントが含まれていれば含める
+- JSONのみ返す。説明文不要
+
+出力形式：
+{"drugs": ["薬剤名1", "薬剤名2", "薬剤名3"]}`
+            }
+          ]
+        }]
+      })
+    });
+
+    const data = await resp.json();
+    const raw = (data.content?.[0]?.text || '').replace(/\`\`\`json|\`\`\`/g, '').trim();
+    const result = JSON.parse(raw);
+    const drugs = result.drugs || [];
+
+    if (drugs.length === 0) {
+      status.textContent = '⚠️ 薬剤名が読み取れませんでした。手入力してください。';
+      status.style.color = '#BA7517';
+      return;
+    }
+
+    // 入力欄に自動セット
+    drugInputs = [];
+    drugs.slice(0, 10).forEach(name => drugInputs.push(name));
+    // 最低2件になるよう調整
+    while (drugInputs.length < 2) drugInputs.push('');
+    renderInputs();
+    updateCount();
+
+    status.textContent = `✅ ${drugs.length}件の薬剤名を読み取りました`;
+    status.style.color = '#1D9E75';
+
+    // 3秒後に非表示
+    setTimeout(() => { status.style.display = 'none'; }, 4000);
+
+  } catch (e) {
+    console.error(e);
+    status.textContent = '⚠️ 読み取りに失敗しました。手入力してください。';
+    status.style.color = '#E24B4A';
+  }
+
+  // inputをリセット（同じファイルを再選択できるように）
+  input.value = '';
 }
 
 // 初期化
