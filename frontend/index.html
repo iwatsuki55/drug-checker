@@ -933,43 +933,16 @@ async function runOcrFromFile(input) {
     });
     const mimeType = file.type || 'image/jpeg';
 
-    // Claude Vision APIで薬剤名を抽出
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    // // バックエンド経由でOCR（APIキー不要・CORS対応）
+    const resp = await fetch(API_BASE + '/api/ocr', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 512,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: { type: 'base64', media_type: mimeType, data: b64 }
-            },
-            {
-              type: 'text',
-              text: `この画像はお薬説明書または薬剤情報提供書です。
-記載されている薬剤名（医薬品名）のみを抽出してください。
-
-ルール：
-- 一般名・先発品名・後発品名どちらでも可
-- 規格（mg等）は除いて薬剤名だけ
-- 食品・サプリメントが含まれていれば含める
-- JSONのみ返す。説明文不要
-
-出力形式：
-{"drugs": ["薬剤名1", "薬剤名2", "薬剤名3"]}`
-            }
-          ]
-        }]
-      })
+      body: JSON.stringify({ imageBase64: b64, mimeType })
     });
 
     const data = await resp.json();
-    const raw = (data.content?.[0]?.text || '').replace(/\`\`\`json|\`\`\`/g, '').trim();
-    const result = JSON.parse(raw);
-    const drugs = result.drugs || [];
+    if (!resp.ok) throw new Error(data.error || '読み取り失敗');
+    const drugs = data.drugs || [];
 
     if (drugs.length === 0) {
       status.textContent = '⚠️ 薬剤名が読み取れませんでした。手入力してください。';
