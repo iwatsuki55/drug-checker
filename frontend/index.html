@@ -956,23 +956,23 @@ async function runOcrFromFile(input) {
 
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || '読み取り失敗');
-    const drugs = data.drugs || [];
+    const ocrDrugs = data.drugs || [];
 
-    if (drugs.length === 0) {
+    if (ocrDrugs.length === 0) {
       status.textContent = '⚠️ 薬剤名が読み取れませんでした。手入力してください。';
       status.style.color = '#BA7517';
       return;
     }
 
-    // 入力欄に自動セット
-    drugs = [];   // グローバル変数drugsを上書き
-    data.drugs.slice(0, 10).forEach(name => drugs.push(name));
+    // グローバル変数drugsに入力欄の内容をセット
+    drugs.length = 0;
+    ocrDrugs.slice(0, 10).forEach(name => drugs.push(name));
     // 最低2件になるよう調整
     while (drugs.length < 2) drugs.push('');
     renderInputs();
     updateRunBtn();
 
-    status.textContent = `✅ ${drugs.length}件の薬剤名を読み取りました`;
+    status.textContent = `✅ ${ocrDrugs.length}件の薬剤名を読み取りました`;
     status.style.color = '#1D9E75';
 
     // 3秒後に非表示
