@@ -934,11 +934,17 @@ async function runOcrFromFile(input) {
     const mimeType = file.type || 'image/jpeg';
 
     // // バックエンド経由でOCR（APIキー不要・CORS対応）
+    // Renderの無料プランはスピンダウンで最大50秒かかる場合あり
+    const timeoutMsg = setTimeout(() => {
+      status.textContent = '⏳ サーバー起動中... もう少しお待ちください（初回は最大60秒）';
+    }, 15000);
+
     const resp = await fetch(API_BASE + '/api/ocr', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ imageBase64: b64, mimeType })
     });
+    clearTimeout(timeoutMsg);
 
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || '読み取り失敗');
