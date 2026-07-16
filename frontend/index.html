@@ -921,9 +921,15 @@ async function runOcrFromFile(input) {
 
   const status = document.getElementById('ocr-status');
   status.style.display = 'block';
-  status.textContent = '📷 画像を読み取り中...';
+  status.textContent = '⏳ サーバーに接続中...';
+  status.style.color = '#1D9E75';
 
   try {
+    // バックエンドを事前にウェイクアップ（Render無料プランのスピンダウン対策）
+    try { await fetch(API_BASE + '/api/health'); } catch(e) {}
+
+    status.textContent = '📷 画像を読み取り中...';
+
     // 画像をbase64に変換
     const b64 = await new Promise((res, rej) => {
       const reader = new FileReader();
@@ -931,7 +937,9 @@ async function runOcrFromFile(input) {
       reader.onerror = rej;
       reader.readAsDataURL(file);
     });
-    const mimeType = file.type || 'image/jpeg';
+    // iOSでfile.typeが空になることがある
+    const mimeType = (file.type && file.type.startsWith('image/')) ? file.type : 'image/jpeg';
+    console.log('[OCR] mimeType:', mimeType, 'b64 length:', b64.length);
 
     // // バックエンド経由でOCR（APIキー不要・CORS対応）
     // Renderの無料プランはスピンダウンで最大50秒かかる場合あり
@@ -971,8 +979,8 @@ async function runOcrFromFile(input) {
     setTimeout(() => { status.style.display = 'none'; }, 4000);
 
   } catch (e) {
-    console.error(e);
-    status.textContent = '⚠️ 読み取りに失敗しました。手入力してください。';
+    console.error('[OCR Error]', e);
+    status.textContent = '⚠️ エラー: ' + (e.message || '不明') + '　手入力してください。';
     status.style.color = '#E24B4A';
   }
 
