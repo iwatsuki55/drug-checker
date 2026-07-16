@@ -482,7 +482,7 @@ app.post("/api/ocr", async (req, res) => {
     return res.status(400).json({ error: "imageBase64 と mimeType が必要です" });
   }
 
-  const ocrPrompt = "この画像はお薬説明書または薬剤情報提供書です。記載されている薬剤名（医薬品名）のみを抽出してください。ルール：一般名・先発品名・後発品名どちらでも可。規格（mg等）は除いて薬剤名だけ。JSONのみ返す。説明文・マークダウン不要。出力形式：{"drugs": ["薬剤名1", "薬剤名2"]}";
+  const ocrPrompt = `この画像はお薬説明書または薬剤情報提供書です。記載されている薬剤名（医薬品名）のみを抽出してください。ルール：一般名・先発品名・後発品名どちらでも可。規格（mg等）は除いて薬剤名だけ。JSONのみ返す。説明文・マークダウン不要。出力形式：{"drugs": ["薬剤名1", "薬剤名2"]}`;
 
   const MAX_RETRY = 3;
   for (let attempt = 1; attempt <= MAX_RETRY; attempt++) {
