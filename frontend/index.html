@@ -965,12 +965,12 @@ async function runOcrFromFile(input) {
     }
 
     // 入力欄に自動セット
-    drugInputs = [];
-    drugs.slice(0, 10).forEach(name => drugInputs.push(name));
+    drugs = [];   // グローバル変数drugsを上書き
+    data.drugs.slice(0, 10).forEach(name => drugs.push(name));
     // 最低2件になるよう調整
-    while (drugInputs.length < 2) drugInputs.push('');
+    while (drugs.length < 2) drugs.push('');
     renderInputs();
-    updateCount();
+    updateRunBtn();
 
     status.textContent = `✅ ${drugs.length}件の薬剤名を読み取りました`;
     status.style.color = '#1D9E75';
