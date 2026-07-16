@@ -481,42 +481,41 @@ app.post("/api/ocr", async (req, res) => {
   if (!imageBase64 || !mimeType) {
     return res.status(400).json({ error: "imageBase64 と mimeType が必要です" });
   }
-  try {
-    const ocrRes = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 512,
-      messages: [{
-        role: "user",
-        content: [
-          {
-            type: "image",
-            source: { type: "base64", media_type: mimeType, data: imageBase64 }
-          },
-          {
-            type: "text",
-            text: `この画像はお薬説明書または薬剤情報提供書です。
-記載されている薬剤名（医薬品名）のみを抽出してください。
 
-ルール：
-- 一般名・先発品名・後発品名どちらでも可
-- 規格（mg等）は除いて薬剤名だけ
-- 食品・サプリメントが含まれていれば含める
-- JSONのみ返す。説明文・マークダウン不要
+  const ocrPrompt = "この画像はお薬説明書または薬剤情報提供書です。記載されている薬剤名（医薬品名）のみを抽出してください。ルール：一般名・先発品名・後発品名どちらでも可。規格（mg等）は除いて薬剤名だけ。JSONのみ返す。説明文・マークダウン不要。出力形式：{"drugs": ["薬剤名1", "薬剤名2"]}";
 
-出力形式：
-{"drugs": ["薬剤名1", "薬剤名2", "薬剤名3"]}`
-          }
-        ]
-      }]
-    });
+  const MAX_RETRY = 3;
+  for (let attempt = 1; attempt <= MAX_RETRY; attempt++) {
+    try {
+      const ocrRes = await client.messages.create({
+        model: "claude-haiku-4-5",
+        max_tokens: 512,
+        messages: [{
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: mimeType, data: imageBase64 } },
+            { type: "text", text: ocrPrompt }
+          ]
+        }]
+      });
 
-    const raw = (ocrRes.content?.[0]?.text || "").replace(/\`\`\`json|\`\`\`/g, "").trim();
-    const result = JSON.parse(raw);
-    res.json({ drugs: result.drugs || [] });
+      const raw = (ocrRes.content?.[0]?.text || "").replace(/```json|```/g, "").trim();
+      const result = JSON.parse(raw);
+      return res.json({ drugs: result.drugs || [] });
 
-  } catch (err) {
-    console.error("[OCR Error]", err);
-    res.status(500).json({ error: err.message });
+    } catch (err) {
+      const status = err.status || err.statusCode || 0;
+      console.error(`[OCR attempt ${attempt}/${MAX_RETRY}] status:${status}`, err.message);
+
+      if ((status === 529 || status === 503 || status === 500) && attempt < MAX_RETRY) {
+        await new Promise(r => setTimeout(r, attempt * 2000));
+        continue;
+      }
+      if (status === 529 || status === 503) {
+        return res.status(503).json({ error: "AIサーバーが混雑しています。しばらくしてから再度お試しください。" });
+      }
+      return res.status(500).json({ error: err.message });
+    }
   }
 });
 
