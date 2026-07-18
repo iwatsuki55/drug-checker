@@ -324,7 +324,7 @@
     <div id="ocr-status" style="display:none;margin-top:8px;text-align:center;
       font-size:12px;color:#1D9E75;font-weight:600;"></div>
     <div style="text-align:center;font-size:11px;color:#9ABAB6;margin-top:6px;">
-      撮影した画像からAIが薬剤名を自動入力 ／ もちろん手入力もOK
+      📸 縦向きで撮影すると精度が上がります ／ 手入力・修正もできます
     </div>
   </div>
 
@@ -972,11 +972,11 @@ async function runOcrFromFile(input) {
     renderInputs();
     updateRunBtn();
 
-    status.textContent = `✅ ${ocrDrugs.length}件の薬剤名を読み取りました`;
+    status.textContent = `✅ ${ocrDrugs.length}件読み取り完了。内容は入力欄で修正できます ✏️`;
     status.style.color = '#1D9E75';
 
     // 3秒後に非表示
-    setTimeout(() => { status.style.display = 'none'; }, 4000);
+    setTimeout(() => { status.style.display = 'none'; }, 6000);
 
   } catch (e) {
     console.error('[OCR Error]', e);
